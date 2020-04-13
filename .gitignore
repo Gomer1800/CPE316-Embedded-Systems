@@ -1,0 +1,8 @@
+*.a
+*.dll
+*.exe
+*.o
+*.obj
+*.so
+*/.git/*
+.git
