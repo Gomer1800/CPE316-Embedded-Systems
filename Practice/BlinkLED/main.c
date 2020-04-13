@@ -7,7 +7,7 @@
  * on XMS432P401R Rev C.
  */
 #include "msp.h"
-#define DELAY100MS 300000 // DELAY * 1 mS assuming 3 MHz clock
+#define DELAY100MS 150000 * 1// DELAY * 1 mS assuming 3 MHz clock
 
 void delayMs(int n);
 
