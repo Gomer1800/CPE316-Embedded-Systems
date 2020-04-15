@@ -23,4 +23,6 @@ void setup_DCO(uint32_t);
 
 void setup_MCLK_to_DCO(void);
 
+uint32_t get_DCO_Frequency();
+
 #endif /* MY_DCO_H_ */

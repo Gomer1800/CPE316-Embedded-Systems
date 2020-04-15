@@ -9,6 +9,7 @@
 // Input:  Frequency desired by user for the DCO on the dev launch board
 // Output: None
 void setup_DCO(uint32_t FREQ) {
+
     CS->KEY = CS_KEY_VAL;           // unlock CS registers
     CS->CTL0 = 0;                   // clear register CTL0
 
@@ -35,6 +36,7 @@ void setup_DCO(uint32_t FREQ) {
 }
 
 void setup_MCLK_to_DCO(void) {
+
     CS->KEY = CS_KEY_VAL;   // unlocks CS
 
     // select DCO clock source for MCLK
@@ -43,5 +45,11 @@ void setup_MCLK_to_DCO(void) {
     CS->KEY = 0;            // locks CS
 }
 
+uint32_t get_DCO_Frequency() {
+
+    uint32_t DCO_FREQUENCY = CS->CTL0;
+
+    return DCO_FREQUENCY;
+}
 
 
