@@ -46,19 +46,19 @@ void delay_us(uint32_t microseconds) {
     switch(FREQ)
     {
         case FREQ_3MHZ:
-            num_loops = (microseconds * 3)/7;
+            num_loops = ((microseconds*10000) * 2745)/10000;
             break;
         case FREQ_6MHZ:
-            num_loops = (microseconds * 6)/7;
+            num_loops = ((microseconds*10000) * 4955)/10000;
             break;
         case FREQ_12MHZ:
-            num_loops = (microseconds * 12)/7;
+            num_loops = ((microseconds*10000) * 9862)/10000;
             break;
         case FREQ_24MHZ:
-            num_loops = (microseconds * 24)/7;
+            num_loops = ((microseconds*10000) * 19798)/10000;
             break;
         default:
-            num_loops = microseconds * 1.5)/7;
+            num_loops = ((microseconds*10000) * 1374)/10000;
             break;
     }
 
