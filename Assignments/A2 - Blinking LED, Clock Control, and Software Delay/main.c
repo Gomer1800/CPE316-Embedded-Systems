@@ -5,67 +5,49 @@
 /**
  * main.c
  */
-void delay_us(uint32_t);
+
+void delay_test_find_N(void);
+
+//void delay_test_find_Min(void);
 
 void main(void)
 {
+    // SET FREQUENCY HERE, SEE My_DCO.h FOR MACROS
     setup_DCO(FREQ_3MHZ);
 
     setup_MCLK_to_DCO();
 
-    // Configure Pin 4.3 to output MCLK, see MDS pin function tables for details
+    ////////// DELAY TEST SETUP START
+
     P4->SEL1 &= ~BIT3;         /* configure P4.3 as simple I/O */
 
-    P4->SEL0 |= BIT3;         /* configure P4.3 as simple I/O*/
+    P4->SEL0 &= ~BIT3;         /* configure P4.3 as simple I/O*/
 
     P4->DIR |= BIT3;           /* P4.3 set as output pin */
 
-    // Blink RED LED to show code is running
-    setup_RED_LED();
+    ////////// DELAY TEST SETUP END
 
-    while(1) {
-        uint32_t DELAY10S = 10000000; // 10 seconds
-
-        P1->OUT |= (BIT0);          /* turn on  P1.0 red LED */
-        delay_us(DELAY10S);
-
-        P1->OUT &= ~(BIT0);         /* turn off P1.0 red LED */
-        delay_us(DELAY10S);
-    }
+    delay_test_find_N();
 }
 
-void delay_us(uint32_t microseconds) {
+void delay_test_find_N(void) {
 
-    // Determine current DCO configuration
-    uint32_t FREQ =  get_DCO_Frequency();
+    // Test function for delay, iterates through
+    uint32_t max_loops = 160000;
+    uint32_t current_loops;
+    uint32_t increment = 10000;
 
-    // Calculate number of iterations for desired delay
+    uint32_t i;
     uint32_t num_loops;
 
-    // TODO Luis: Figure out how an exact expression for number of us per loop, current one overshoots
-    switch(FREQ)
-    {
-        case FREQ_3MHZ:
-            num_loops = (microseconds * 3)/7;
-            break;
-        case FREQ_6MHZ:
-            num_loops = (microseconds * 6)/7;
-            break;
-        case FREQ_12MHZ:
-            num_loops = (microseconds * 12)/7;
-            break;
-        case FREQ_24MHZ:
-            num_loops = (microseconds * 24)/7;
-            break;
-        default:
-            num_loops = microseconds * 1.5)/7;
-            break;
-    }
-
     // Delay loop
-    uint32_t i;
-    for (i=0; i<num_loops; i++)
+    for (current_loops = 10000; current_loops <= max_loops; current_loops = current_loops + increment)
     {
-        asm ("NOP");
+        num_loops = current_loops;
+        P4->OUT = ~P4->OUT; // TOGGLE P4.3
+        for (i=0; i<=num_loops; i++)
+        {
+            asm ("NOP");
+        }
     }
 }
