@@ -11,6 +11,7 @@ GEN_CMDS__FLAG :=
 
 ORDERED_OBJS += \
 "./My_DCO.obj" \
+"./My_Delays.obj" \
 "./My_LEDS.obj" \
 "./main.obj" \
 "./startup_msp432p401r_ccs.obj" \
@@ -158,8 +159,8 @@ A2\ -\ Blinking\ LED,\ Clock\ Control,\ and\ Software\ Delay.hex: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(BIN_OUTPUTS__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "My_DCO.obj" "My_LEDS.obj" "main.obj" "startup_msp432p401r_ccs.obj" "system_msp432p401r.obj" 
-	-$(RM) "My_DCO.d" "My_LEDS.d" "main.d" "startup_msp432p401r_ccs.d" "system_msp432p401r.d" 
+	-$(RM) "My_DCO.obj" "My_Delays.obj" "My_LEDS.obj" "main.obj" "startup_msp432p401r_ccs.obj" "system_msp432p401r.obj" 
+	-$(RM) "My_DCO.d" "My_Delays.d" "My_LEDS.d" "main.d" "startup_msp432p401r_ccs.d" "system_msp432p401r.d" 
 	-@echo 'Finished clean'
 	-@echo ' '
 

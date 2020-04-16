@@ -10,6 +10,7 @@ CMD_SRCS += \
 
 C_SRCS += \
 ../My_DCO.c \
+../My_Delays.c \
 ../My_LEDS.c \
 ../main.c \
 ../startup_msp432p401r_ccs.c \
@@ -17,6 +18,7 @@ C_SRCS += \
 
 C_DEPS += \
 ./My_DCO.d \
+./My_Delays.d \
 ./My_LEDS.d \
 ./main.d \
 ./startup_msp432p401r_ccs.d \
@@ -24,6 +26,7 @@ C_DEPS += \
 
 OBJS += \
 ./My_DCO.obj \
+./My_Delays.obj \
 ./My_LEDS.obj \
 ./main.obj \
 ./startup_msp432p401r_ccs.obj \
@@ -31,6 +34,7 @@ OBJS += \
 
 OBJS__QUOTED += \
 "My_DCO.obj" \
+"My_Delays.obj" \
 "My_LEDS.obj" \
 "main.obj" \
 "startup_msp432p401r_ccs.obj" \
@@ -38,6 +42,7 @@ OBJS__QUOTED += \
 
 C_DEPS__QUOTED += \
 "My_DCO.d" \
+"My_Delays.d" \
 "My_LEDS.d" \
 "main.d" \
 "startup_msp432p401r_ccs.d" \
@@ -45,6 +50,7 @@ C_DEPS__QUOTED += \
 
 C_SRCS__QUOTED += \
 "../My_DCO.c" \
+"../My_Delays.c" \
 "../My_LEDS.c" \
 "../main.c" \
 "../startup_msp432p401r_ccs.c" \

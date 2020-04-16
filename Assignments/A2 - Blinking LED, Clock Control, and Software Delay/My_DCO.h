@@ -11,11 +11,12 @@
 #include "msp.h"
 #include  "STDINT.H" // definition of uint32_t
 
+// Macros for human readable access to clock control settings
 #define FREQ_1_5MHZ CS_CTL0_DCORSEL_0
-#define FREQ_3MHZ CS_CTL0_DCORSEL_1
-#define FREQ_6MHZ CS_CTL0_DCORSEL_2
-#define FREQ_12MHZ CS_CTL0_DCORSEL_3
-#define FREQ_24MHZ CS_CTL0_DCORSEL_4
+#define FREQ_3MHZ   CS_CTL0_DCORSEL_1
+#define FREQ_6MHZ   CS_CTL0_DCORSEL_2
+#define FREQ_12MHZ  CS_CTL0_DCORSEL_3
+#define FREQ_24MHZ  CS_CTL0_DCORSEL_4
 
 // Functions
 

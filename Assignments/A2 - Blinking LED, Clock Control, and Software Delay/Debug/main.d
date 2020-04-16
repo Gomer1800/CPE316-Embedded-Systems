@@ -21,6 +21,7 @@ main.obj: C:/Users/luisg/ti/ccs1000/ccs/ccs_base/arm/include/CMSIS/cmsis_ccs.h
 main.obj: C:/Users/luisg/ti/ccs1000/ccs/ccs_base/arm/include/system_msp432p401r.h
 main.obj: ../My_DCO.h
 main.obj: ../My_LEDS.h
+main.obj: ../My_Delays.h
 
 ../main.c: 
 C:/Users/luisg/ti/ccs1000/ccs/ccs_base/arm/include/msp.h: 
@@ -43,3 +44,4 @@ C:/Users/luisg/ti/ccs1000/ccs/ccs_base/arm/include/CMSIS/cmsis_ccs.h:
 C:/Users/luisg/ti/ccs1000/ccs/ccs_base/arm/include/system_msp432p401r.h: 
 ../My_DCO.h: 
 ../My_LEDS.h: 
+../My_Delays.h: 
