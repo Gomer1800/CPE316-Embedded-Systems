@@ -13,8 +13,8 @@
 #include <stdlib.h>
 
 // flags for constructor_digital I/0
-#define HIGH        ((uint8_t)0xFF)
-#define LOW         ((uint8_t)0x00)
+#define NIBBLE      ((uint8_t)0xFF)
+#define BYTE        ((uint8_t)0x00)
 #define REGISTER    ((uint8_t)0xFF)
 #define COMMAND     ((uint8_t)0x00)
 
@@ -62,7 +62,7 @@
 #define LCD_5x11DOTS    ((uint8_t)0x04)
 #define LCD_5x8DOTS     ((uint8_t)0x00)
 
-typedef struct{
+typedef struct {
     volatile uint8_t* _rs_pin;        // LOW: command.  HIGH: character.
     volatile uint8_t* _rw_pin;        // LOW: write to LCD.  HIGH: read from LCD.
     volatile uint8_t* _enable_pin;    // activated by a HIGH pulse.

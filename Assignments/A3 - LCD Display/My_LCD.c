@@ -16,21 +16,21 @@ void* constructor_LCD(uint8_t fourbitmode)
     lcd = malloc(sizeof(LCD));
 
     // control bits
-    lcd->_rs_pin        = &(P6->OUT);         // 6.7
-    lcd->_rw_pin        = &(P1->OUT);         // 1.6
-    lcd->_enable_pin    = &(P6->OUT);         // 6.6
+    lcd->_rs_pin        = &(P6->OUT);   // 6.7
+    lcd->_rw_pin        = &(P1->OUT);   // 1.6
+    lcd->_enable_pin    = &(P6->OUT);   // 6.6
 
     // Bits[0:3]
-    lcd->_data_pins[0] = &(P3->OUT);   // 3.7
-    lcd->_data_pins[1] = &(P3->OUT);   // 3.5
-    lcd->_data_pins[2] = &(P5->OUT);   // 5.1
-    lcd->_data_pins[3] = &(P2->OUT);   // 2.3
+    lcd->_data_pins[0]  = &(P3->OUT);    // 3.7
+    lcd->_data_pins[1]  = &(P3->OUT);    // 3.5
+    lcd->_data_pins[2]  = &(P5->OUT);    // 5.1
+    lcd->_data_pins[3]  = &(P2->OUT);    // 2.3
 
     // Bits[4:7]
-    lcd->_data_pins[4] = &(P3->OUT);   // 3.6
-    lcd->_data_pins[5] = &(P5->OUT);   // 5.2
-    lcd->_data_pins[6] = &(P5->OUT);   // 5.0
-    lcd->_data_pins[7] = &(P1->OUT);   // 1.7
+    lcd->_data_pins[4]  = &(P3->OUT);    // 3.6
+    lcd->_data_pins[5]  = &(P5->OUT);    // 5.2
+    lcd->_data_pins[6]  = &(P5->OUT);    // 5.0
+    lcd->_data_pins[7]  = &(P1->OUT);    // 1.7
 
     if (fourbitmode)
         lcd->_displayfunction = LCD_4BITMODE | LCD_1LINE | LCD_5x8DOTS;
@@ -313,18 +313,15 @@ void send(void *lcd, uint8_t value, uint8_t mode) {
 
     *(((LCD*)lcd)->_rw_pin) &= ~BIT6;
 
-    write8bits(lcd, value);
-    /*
     if( (((LCD*)lcd)->_displayfunction) & LCD_8BITMODE )
     {
         write8bits(lcd, value);
     }
     else
     {
-        write4bits(lcd, value>>4);
+        // write4bits(lcd, value >> 4);
         write4bits(lcd, value);
     }
-    */
 }
 
 void pulseEnable(void *lcd)
@@ -346,7 +343,32 @@ void write4bits(void *lcd, uint8_t value)
     uint8_t want;
 
     uint8_t i;
-    for(i = 0; i < 4; i++)
+
+    // Feeds Least Significant Nibble from Byte
+    for(i = 4; i < 8; i++)
+    {
+        // Retrieve the relevant bit
+        have_pin = get_data_pin_bit(i);
+        have = ((*(((LCD*)lcd)->_data_pins[i])) & have_pin) >> get_shift_amount(have_pin);
+        want = (value >> (i-4)) & 0x01;
+
+        if(have != want) // check, are relevant bits different?
+        {
+            if (have > 0)
+            {   // Toggling from high to low
+                *(((LCD*)lcd)->_data_pins[i]) &= ~have_pin;
+            }
+            else
+            {   // Toggling from low to high
+                *(((LCD*)lcd)->_data_pins[i]) |= have_pin;
+            }
+        }
+    }
+
+    pulseEnable(lcd);
+
+    // Feeds Most Significant Nibble from Byte
+    for(i = 4; i < 8; i++)
     {
         // Retrieve the relevant bit
         have_pin = get_data_pin_bit(i);
@@ -357,11 +379,11 @@ void write4bits(void *lcd, uint8_t value)
         {
             if (have > 0)
             {   // Toggling from high to low
-                (*(((LCD*)lcd)->_data_pins[i])) &= ~(get_data_pin_bit(i));
+                *(((LCD*)lcd)->_data_pins[i]) &= ~have_pin;
             }
             else
             {   // Toggling from low to high
-                (*(((LCD*)lcd)->_data_pins[i])) |= get_data_pin_bit(i);
+                *(((LCD*)lcd)->_data_pins[i]) |= have_pin;
             }
         }
     }
@@ -387,11 +409,11 @@ void write8bits(void *lcd, uint8_t value)
         {
             if (have > 0)
             {   // Toggling from high to low
-                (*(((LCD*)lcd)->_data_pins[i])) &= ~(get_data_pin_bit(i));
+                *(((LCD*)lcd)->_data_pins[i]) &= ~have_pin;
             }
             else
             {   // Toggling from low to high
-                (*(((LCD*)lcd)->_data_pins[i])) |= get_data_pin_bit(i);
+                *(((LCD*)lcd)->_data_pins[i]) |= have_pin;
             }
         }
     }

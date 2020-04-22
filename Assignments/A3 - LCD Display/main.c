@@ -15,7 +15,7 @@ void main(void)
 
     // construct lcd
     void *lcd;
-    lcd = constructor_LCD(0);
+    lcd = constructor_LCD(NIBBLE);
 
     // set up the LCD's number of columns and rows:
     begin_LCD(lcd, 16, 1, LCD_5x8DOTS);
