@@ -12,12 +12,16 @@
 #include  "STDINT.H"        // definition of uint32_t
 #include <stdlib.h>
 
-// flags for constructor_LCD
-#define HIGH   ((uint8_t)0xFF)
-#define LOW   ((uint8_t)0x00)
+// flags for constructor_digital I/0
+#define HIGH        ((uint8_t)0xFF)
+#define LOW         ((uint8_t)0x00)
+#define REGISTER    ((uint8_t)0xFF)
+#define COMMAND     ((uint8_t)0x00)
 
 // Delay Constant
-#define DELAY50us 50000
+#define DELAY50MS   50000   // 50ms
+#define DELAY4_1MS  4500    // 4.1ms
+#define DELAY2MS    2000    // 2ms
 
 // commands
 #define LCD_CLEARDISPLAY 0x01
@@ -66,24 +70,26 @@ typedef struct{
     uint8_t _displaycontrol;
     uint8_t _displaymode;
 
-    uint8_t _initialized;
+    // uint8_t _initialized;
 
     uint8_t _numlines;
     uint8_t _row_offsets[4];
 
 } LCD;
 
-/******** constructor & destructors ********/
+/******** constructor & destructor ********/
 
 void* constructor_LCD(uint8_t fourbitmode);
 
 void destroy_LCD(void *lcd);
 
+/******** setup ********/
+
 void begin_LCD(void *lcd, uint8_t cols, uint8_t lines, uint8_t dotsize);
 
 void setRowOffsets(void *lcd, int row1, int row2, int row3, int row4);
 
-void enable_LCD_Output_Pins(void);
+void setup_LCD_Pins(void);
 
 uint16_t get_data_pin_bit(uint8_t);
 

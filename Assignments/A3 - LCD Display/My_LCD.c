@@ -8,6 +8,8 @@
  *      & ported to C by Luis Gomez
  */
 
+/******** constructor & destructor ********/
+
 void* constructor_LCD(uint8_t fourbitmode)
 {
     LCD *lcd;
@@ -35,6 +37,8 @@ void* constructor_LCD(uint8_t fourbitmode)
     else
         lcd->_displayfunction = LCD_8BITMODE | LCD_1LINE | LCD_5x8DOTS;
 
+    begin_LCD(lcd, 16, 1, LCD_5x8DOTS);
+
     return lcd;
 }
 
@@ -42,6 +46,8 @@ void destroy_LCD(void *lcd)
 {
     free(lcd);
 }
+
+/******** setup ********/
 
 void begin_LCD(void *lcd, uint8_t cols, uint8_t lines, uint8_t dotsize)
 {
@@ -54,14 +60,14 @@ void begin_LCD(void *lcd, uint8_t cols, uint8_t lines, uint8_t dotsize)
     setRowOffsets(lcd, 0x00, 0x40, 0x00 + cols, 0x40 + cols);
 
     // Do these once, instead of every time a character is drawn for speed reasons.
-    enable_LCD_Output_Pins();
+    setup_LCD_Pins();
 
     // Change according to data sheet
-    __delay_cycles(DELAY50us);
+    __delay_cycles(DELAY50MS);
 
     // Now we pull both RS and R/W low to begin commands
-    *(((LCD*)lcd)->_rs_pin) &= ~BIT7;
-    *(((LCD*)lcd)->_rw_pin) &= ~BIT6;
+    *(((LCD*)lcd)->_rs_pin)     &= ~BIT7;
+    *(((LCD*)lcd)->_rw_pin)     &= ~BIT6;
     *(((LCD*)lcd)->_enable_pin) &= ~BIT6;
 
     //put the LCD into 4 bit or 8 bit mode
@@ -70,11 +76,11 @@ void begin_LCD(void *lcd, uint8_t cols, uint8_t lines, uint8_t dotsize)
 
         // we start in 8bit mode, try to set 4 bit mode
         write4bits(lcd, 0x03);
-        __delay_cycles(4500);   // wait min 4.1ms
+        __delay_cycles(DELAY4_1MS);
 
         // second try
         write4bits(lcd, 0x03);
-        __delay_cycles(4500);   // wait min 4.1ms
+        __delay_cycles(DELAY4_1MS);
 
         // third go!
         write4bits(lcd, 0x03);
@@ -83,17 +89,18 @@ void begin_LCD(void *lcd, uint8_t cols, uint8_t lines, uint8_t dotsize)
         // finally, set to 4-bit interface
         write4bits(lcd, 0x02);
     }
-    else {
+    else
+    {
         // this is according to the hitachi HD44780 datasheet
         // page 45 figure 23
 
         // Send function set command sequence
         command(lcd, LCD_FUNCTIONSET | (((LCD*)lcd)->_displayfunction) );
-        __delay_cycles(4500);  // wait more than 4.1ms
+        __delay_cycles(DELAY4_1MS);
 
         // second try
         command(lcd, LCD_FUNCTIONSET | (((LCD*)lcd)->_displayfunction) );
-        __delay_cycles(150);
+        __delay_cycles(DELAY4_1MS);
 
         // third go
         command(lcd, LCD_FUNCTIONSET | (((LCD*)lcd)->_displayfunction) );
@@ -103,7 +110,7 @@ void begin_LCD(void *lcd, uint8_t cols, uint8_t lines, uint8_t dotsize)
     command(lcd, LCD_FUNCTIONSET | (((LCD*)lcd)->_displayfunction) );
 
     // turn the display on with no cursor or blinking default
-    (((LCD*)lcd)->_displaycontrol) = LCD_DISPLAYON | LCD_CURSOROFF | LCD_BLINKOFF;
+    ((LCD*)lcd)->_displaycontrol = LCD_DISPLAYON | LCD_CURSOROFF | LCD_BLINKOFF;
     display(lcd);
 
     // clear it off
@@ -124,7 +131,7 @@ void setRowOffsets(void *lcd, int row0, int row1, int row2, int row3)
   ((LCD*)lcd)->_row_offsets[3] = row3;
 }
 
-void enable_LCD_Output_Pins(void)
+void setup_LCD_Pins(void)
 {
     uint16_t DATA_BIT = 0;
 
@@ -225,7 +232,7 @@ uint16_t get_data_pin_bit(uint8_t bit_index)
 void clear(void *lcd)
 {
     command(lcd, LCD_CLEARDISPLAY);  // clear display, set cursor position to zero
-    __delay_cycles(2000);    // this command takes a long time!
+    __delay_cycles(DELAY2MS);    // this command takes a long time!
 }
 
 // Turn the display on/off (quickly)
@@ -244,12 +251,12 @@ void display(void *lcd)
 
 inline void command(void *lcd, uint8_t value)
 {
-    send(lcd, value, LOW);
+    send(lcd, value, COMMAND);
 }
 
 inline size_t write(void *lcd, uint8_t value)
 {
-    send(lcd, value, HIGH);
+    send(lcd, value, REGISTER);
     return 1; // assume success
 }
 
@@ -259,8 +266,18 @@ inline size_t write(void *lcd, uint8_t value)
 void send(void *lcd, uint8_t value, uint8_t mode) {
 
     // write to digital pins
-    *(((LCD*)lcd)->_rs_pin) &= (BIT7 & mode);
-    *(((LCD*)lcd)->_rw_pin) &= (BIT6 & mode);
+    switch(mode)
+    {
+        case COMMAND:
+            *(((LCD*)lcd)->_rs_pin) &= ~BIT7;
+            break;
+        default:
+            // REGISTER
+            *(((LCD*)lcd)->_rs_pin) |= BIT7;
+            break;
+    }
+
+    *(((LCD*)lcd)->_rw_pin) &= ~BIT6;
 
     if( (((LCD*)lcd)->_displayfunction) & LCD_8BITMODE )
     {
@@ -270,7 +287,7 @@ void send(void *lcd, uint8_t value, uint8_t mode) {
     {
         write4bits(lcd, value>>4);
         write4bits(lcd, value);
-  }
+    }
 }
 
 void pulseEnable(void *lcd)
