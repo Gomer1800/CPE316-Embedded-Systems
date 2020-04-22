@@ -294,6 +294,56 @@ size_t write(void *lcd, uint8_t value)
     return 1; // assume success
 }
 
+uint8_t get_char(char my_char)
+{
+    //TODO(Luis): move this to a data structure
+
+    uint8_t byte;
+    switch(my_char)
+    {
+        case '0':
+            byte = 0x30;
+            break;
+        case '1':
+            byte = 0x31;
+            break;
+        case '2':
+            byte = 0x32;
+            break;
+        case '3':
+            byte = 0x33;
+            break;
+        case '4':
+            byte = 0x34;
+            break;
+        case '5':
+            byte = 0x35;
+            break;
+        case '6':
+            byte = 0x36;
+            break;
+        case '7':
+            byte = 0x37;
+            break;
+        case '8':
+            byte = 0x38;
+            break;
+        case '9':
+            byte = 0x39;
+            break;
+        case '#':
+            byte = 0x23;
+            break;
+        case '*':
+            byte = 0x2A;
+            break;
+        default: // '?' , notifies user with a ? that unknown char given
+            byte = 0x3F;
+            break;
+    }
+    return byte;
+}
+
 /************ low level data pushing commands **********/
 
 // write either command or data, with automatic 4/8-bit selection

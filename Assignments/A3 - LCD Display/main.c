@@ -15,7 +15,7 @@ void main(void)
 
     // construct lcd
     void *lcd;
-    lcd = constructor_LCD(NIBBLE);
+    lcd = constructor_LCD(BYTE);
 
     // set up the LCD's number of columns and rows:
     begin_LCD(lcd, 16, 1, LCD_5x8DOTS);
@@ -27,15 +27,17 @@ void main(void)
 
     setup_RED_LED();
 
+    char* string = "1234567890#*";
     uint8_t i;
-    for(i = 0x00; i<0xFF; i++)
+    for(i = 0x00; i<0x0D; i++)
     //while(1)
     {
         // P4->OUT = ~P4->OUT;
         P1->OUT |= (BIT0);          /* turn on  P1.0 red LED */
         delay_us(DELAY40ms);
 
-        write(lcd , i);
+        write(lcd , get_char(string[i]));
+        //write(lcd , i);
         // noDisplay(lcd);
 
         // P4->OUT = ~P4->OUT;

@@ -106,6 +106,8 @@ void noDisplay(void *lcd);
 
 void display(void *lcd);
 
+uint8_t get_char(char);
+
 /*********** mid level commands, for sending data/cmds */
 
 inline void command(void *lcd, uint8_t value);
