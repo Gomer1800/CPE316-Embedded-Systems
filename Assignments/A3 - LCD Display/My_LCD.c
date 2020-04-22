@@ -38,10 +38,15 @@ void* constructor_LCD(uint8_t fourbitmode)
     return lcd;
 }
 
+void destroy_LCD(void *lcd)
+{
+    free(lcd);
+}
+
 void begin_LCD(void *lcd, uint8_t cols, uint8_t lines, uint8_t dotsize)
 {
     if (lines > 1) {
-      ((LCD*)lcd)->_displayfunction |= LCD_2LINE;
+      (((LCD*)lcd)->_displayfunction) |= LCD_2LINE;
     }
 
     ((LCD*)lcd)->_numlines = lines;
@@ -65,11 +70,11 @@ void begin_LCD(void *lcd, uint8_t cols, uint8_t lines, uint8_t dotsize)
 
         // we start in 8bit mode, try to set 4 bit mode
         write4bits(lcd, 0x03);
-        __delay_cycles(4500); // wait min 4.1ms
+        __delay_cycles(4500);   // wait min 4.1ms
 
         // second try
         write4bits(lcd, 0x03);
-        __delay_cycles(4500); // wait min 4.1ms
+        __delay_cycles(4500);   // wait min 4.1ms
 
         // third go!
         write4bits(lcd, 0x03);
@@ -99,6 +104,16 @@ void begin_LCD(void *lcd, uint8_t cols, uint8_t lines, uint8_t dotsize)
 
     // turn the display on with no cursor or blinking default
     (((LCD*)lcd)->_displaycontrol) = LCD_DISPLAYON | LCD_CURSOROFF | LCD_BLINKOFF;
+    display(lcd);
+
+    // clear it off
+    clear(lcd);
+
+    // Initialize to default text direction (for romance languages)
+    (((LCD*)lcd)->_displaymode) = LCD_ENTRYLEFT | LCD_ENTRYSHIFTDECREMENT;
+
+    // set the entry mode
+    command(lcd, LCD_ENTRYMODESET | (((LCD*)lcd)->_displaymode) );
 }
 
 void setRowOffsets(void *lcd, int row0, int row1, int row2, int row3)
@@ -204,10 +219,38 @@ uint16_t get_data_pin_bit(uint8_t bit_index)
     }
     return DATA_BIT;
 }
+
+/********** high level commands, for the user! */
+
+void clear(void *lcd)
+{
+    command(lcd, LCD_CLEARDISPLAY);  // clear display, set cursor position to zero
+    __delay_cycles(2000);    // this command takes a long time!
+}
+
+// Turn the display on/off (quickly)
+void noDisplay(void *lcd)
+{
+    (((LCD*)lcd)->_displaycontrol) &= ~LCD_DISPLAYON;
+    command( lcd, LCD_DISPLAYCONTROL | (((LCD*)lcd)->_displaycontrol) );
+}
+void display(void *lcd)
+{
+    (((LCD*)lcd)->_displaycontrol) |= LCD_DISPLAYON;
+    command( lcd, LCD_DISPLAYCONTROL | (((LCD*)lcd)->_displaycontrol) );
+}
+
 /*********** mid level commands, for sending data/cmds */
 
-inline void command(void *lcd, uint8_t value) {
-    send(lcd, value, 0x00);
+inline void command(void *lcd, uint8_t value)
+{
+    send(lcd, value, LOW);
+}
+
+inline size_t write(void *lcd, uint8_t value)
+{
+    send(lcd, value, HIGH);
+    return 1; // assume success
 }
 
 /************ low level data pushing commands **********/
@@ -215,9 +258,9 @@ inline void command(void *lcd, uint8_t value) {
 // write either command or data, with automatic 4/8-bit selection
 void send(void *lcd, uint8_t value, uint8_t mode) {
 
-    *(((LCD*)lcd)->_rs_pin) = (BIT7 & mode);
-
-    *(((LCD*)lcd)->_rw_pin) = (BIT6 & mode);
+    // write to digital pins
+    *(((LCD*)lcd)->_rs_pin) &= (BIT7 & mode);
+    *(((LCD*)lcd)->_rw_pin) &= (BIT6 & mode);
 
     if( (((LCD*)lcd)->_displayfunction) & LCD_8BITMODE )
     {

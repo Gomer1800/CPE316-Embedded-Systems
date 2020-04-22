@@ -12,6 +12,10 @@
 #include  "STDINT.H"        // definition of uint32_t
 #include <stdlib.h>
 
+// flags for constructor_LCD
+#define HIGH   ((uint8_t)0xFF)
+#define LOW   ((uint8_t)0x00)
+
 // Delay Constant
 #define DELAY50us 50000
 
@@ -24,6 +28,12 @@
 #define LCD_FUNCTIONSET 0x20
 #define LCD_SETCGRAMADDR 0x40
 #define LCD_SETDDRAMADDR 0x80
+
+// flags for display entry mode
+#define LCD_ENTRYRIGHT 0x00
+#define LCD_ENTRYLEFT 0x02
+#define LCD_ENTRYSHIFTINCREMENT 0x01
+#define LCD_ENTRYSHIFTDECREMENT 0x00
 
 // flags for display on/off control
 #define LCD_DISPLAYON 0x04
@@ -63,8 +73,11 @@ typedef struct{
 
 } LCD;
 
-/********** high level commands, for the user! */
+/******** constructor & destructors ********/
+
 void* constructor_LCD(uint8_t fourbitmode);
+
+void destroy_LCD(void *lcd);
 
 void begin_LCD(void *lcd, uint8_t cols, uint8_t lines, uint8_t dotsize);
 
@@ -74,9 +87,19 @@ void enable_LCD_Output_Pins(void);
 
 uint16_t get_data_pin_bit(uint8_t);
 
+/********** high level commands, for the user! */
+
+void clear(void *lcd);
+
+void noDisplay(void *lcd);
+
+void display(void *lcd);
+
 /*********** mid level commands, for sending data/cmds */
 
 inline void command(void *lcd, uint8_t value);
+
+inline size_t write(void *lcd, uint8_t value);
 
 /************ low level data pushing commands **********/
 
@@ -90,6 +113,6 @@ void write4bits(void *lcd, uint8_t);
 
 void write8bits(void *lcd, uint8_t);
 
-// void destroy_LCD(void *lcd);
+void destroy_LCD(void *lcd);
 
 #endif /* MY_LCD_H_ */
