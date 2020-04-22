@@ -79,9 +79,26 @@ void begin_LCD(void *lcd, uint8_t cols, uint8_t lines, uint8_t dotsize)
         write4bits(lcd, 0x02);
     }
     else {
+        // this is according to the hitachi HD44780 datasheet
+        // page 45 figure 23
 
+        // Send function set command sequence
+        command(lcd, LCD_FUNCTIONSET | (((LCD*)lcd)->_displayfunction) );
+        __delay_cycles(4500);  // wait more than 4.1ms
+
+        // second try
+        command(lcd, LCD_FUNCTIONSET | (((LCD*)lcd)->_displayfunction) );
+        __delay_cycles(150);
+
+        // third go
+        command(lcd, LCD_FUNCTIONSET | (((LCD*)lcd)->_displayfunction) );
     }
 
+    // finally, set # lines, font size, etc.
+    command(lcd, LCD_FUNCTIONSET | (((LCD*)lcd)->_displayfunction) );
+
+    // turn the display on with no cursor or blinking default
+    (((LCD*)lcd)->_displaycontrol) = LCD_DISPLAYON | LCD_CURSOROFF | LCD_BLINKOFF;
 }
 
 void setRowOffsets(void *lcd, int row0, int row1, int row2, int row3)

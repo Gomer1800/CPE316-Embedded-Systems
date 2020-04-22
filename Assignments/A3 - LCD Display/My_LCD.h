@@ -15,6 +15,24 @@
 // Delay Constant
 #define DELAY50us 50000
 
+// commands
+#define LCD_CLEARDISPLAY 0x01
+#define LCD_RETURNHOME 0x02
+#define LCD_ENTRYMODESET 0x04
+#define LCD_DISPLAYCONTROL 0x08
+#define LCD_CURSORSHIFT 0x10
+#define LCD_FUNCTIONSET 0x20
+#define LCD_SETCGRAMADDR 0x40
+#define LCD_SETDDRAMADDR 0x80
+
+// flags for display on/off control
+#define LCD_DISPLAYON 0x04
+#define LCD_DISPLAYOFF 0x00
+#define LCD_CURSORON 0x02
+#define LCD_CURSOROFF 0x00
+#define LCD_BLINKON 0x01
+#define LCD_BLINKOFF 0x00
+
 // flags for constructor_LCD
 #define NIBBLE_ON   ((uint8_t)0x01)
 #define NIBBLE_OFF  ((uint8_t)0x00)
@@ -45,6 +63,7 @@ typedef struct{
 
 } LCD;
 
+/********** high level commands, for the user! */
 void* constructor_LCD(uint8_t fourbitmode);
 
 void begin_LCD(void *lcd, uint8_t cols, uint8_t lines, uint8_t dotsize);
