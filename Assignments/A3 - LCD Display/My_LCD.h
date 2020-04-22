@@ -12,6 +12,9 @@
 #include  "STDINT.H"        // definition of uint32_t
 #include <stdlib.h>
 
+// Delay Constant
+#define DELAY50us 50000
+
 // flags for constructor_LCD
 #define NIBBLE_ON   ((uint8_t)0x01)
 #define NIBBLE_OFF  ((uint8_t)0x00)
@@ -27,7 +30,8 @@
 typedef struct{
     volatile uint8_t* _rs_pin;        // LOW: command.  HIGH: character.
     volatile uint8_t* _rw_pin;        // LOW: write to LCD.  HIGH: read from LCD.
-    // uint8_t* _enable_pin;    // activated by a HIGH pulse.
+    volatile uint8_t* _enable_pin;    // activated by a HIGH pulse.
+
     volatile uint8_t* _data_pins[8];
 
     uint8_t _displayfunction;
@@ -46,6 +50,26 @@ void* constructor_LCD(uint8_t fourbitmode);
 void begin_LCD(void *lcd, uint8_t cols, uint8_t lines, uint8_t dotsize);
 
 void setRowOffsets(void *lcd, int row1, int row2, int row3, int row4);
+
+void enable_LCD_Output_Pins(void);
+
+uint16_t get_data_pin_bit(uint8_t);
+
+/*********** mid level commands, for sending data/cmds */
+
+inline void command(void *lcd, uint8_t value);
+
+/************ low level data pushing commands **********/
+
+// write either command or data, with automatic 4/8-bit selection
+
+void send(void *lcd, uint8_t value, uint8_t mode);
+
+void pulseEnable(void *lcd);
+
+void write4bits(void *lcd, uint8_t);
+
+void write8bits(void *lcd, uint8_t);
 
 // void destroy_LCD(void *lcd);
 
