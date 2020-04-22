@@ -19,33 +19,36 @@
 #define COMMAND     ((uint8_t)0x00)
 
 // Delay Constant
+#define DELAY1S     1000000 // 1s
+#define DELAY100MS  100000  // 100ms
 #define DELAY50MS   50000   // 50ms
+#define DELAY5MS    5000    // 5ms
 #define DELAY4_1MS  4500    // 4.1ms
 #define DELAY2MS    2000    // 2ms
 
 // commands
-#define LCD_CLEARDISPLAY 0x01
-#define LCD_RETURNHOME 0x02
-#define LCD_ENTRYMODESET 0x04
-#define LCD_DISPLAYCONTROL 0x08
-#define LCD_CURSORSHIFT 0x10
-#define LCD_FUNCTIONSET 0x20
-#define LCD_SETCGRAMADDR 0x40
-#define LCD_SETDDRAMADDR 0x80
+#define LCD_CLEARDISPLAY    0x01
+#define LCD_RETURNHOME      0x02
+#define LCD_ENTRYMODESET    0x04
+#define LCD_DISPLAYCONTROL  0x08
+#define LCD_CURSORSHIFT     0x10
+#define LCD_FUNCTIONSET     0x20
+#define LCD_SETCGRAMADDR    0x40
+#define LCD_SETDDRAMADDR    0x80
 
 // flags for display entry mode
-#define LCD_ENTRYRIGHT 0x00
-#define LCD_ENTRYLEFT 0x02
+#define LCD_ENTRYRIGHT          0x00
+#define LCD_ENTRYLEFT           0x02
 #define LCD_ENTRYSHIFTINCREMENT 0x01
 #define LCD_ENTRYSHIFTDECREMENT 0x00
 
 // flags for display on/off control
-#define LCD_DISPLAYON 0x04
-#define LCD_DISPLAYOFF 0x00
-#define LCD_CURSORON 0x02
-#define LCD_CURSOROFF 0x00
-#define LCD_BLINKON 0x01
-#define LCD_BLINKOFF 0x00
+#define LCD_DISPLAYON   0x04
+#define LCD_DISPLAYOFF  0x00
+#define LCD_CURSORON    0x02
+#define LCD_CURSOROFF   0x00
+#define LCD_BLINKON     0x01
+#define LCD_BLINKOFF    0x00
 
 // flags for constructor_LCD
 #define NIBBLE_ON   ((uint8_t)0x01)
@@ -56,7 +59,7 @@
 #define LCD_4BITMODE    ((uint8_t)0x00)
 #define LCD_2LINE       ((uint8_t)0x08)
 #define LCD_1LINE       ((uint8_t)0x00)
-#define LCD_5x10DOTS    ((uint8_t)0x04)
+#define LCD_5x11DOTS    ((uint8_t)0x04)
 #define LCD_5x8DOTS     ((uint8_t)0x00)
 
 typedef struct{
@@ -87,11 +90,13 @@ void destroy_LCD(void *lcd);
 
 void begin_LCD(void *lcd, uint8_t cols, uint8_t lines, uint8_t dotsize);
 
-void setRowOffsets(void *lcd, int row1, int row2, int row3, int row4);
+void setRowOffsets(void *lcd, uint8_t row1, uint8_t row2, uint8_t row3, uint8_t row4);
 
 void setup_LCD_Pins(void);
 
-uint16_t get_data_pin_bit(uint8_t);
+uint8_t get_data_pin_bit(uint8_t);
+
+uint8_t get_shift_amount(uint8_t);
 
 /********** high level commands, for the user! */
 

@@ -70,37 +70,35 @@ void begin_LCD(void *lcd, uint8_t cols, uint8_t lines, uint8_t dotsize)
     *(((LCD*)lcd)->_rw_pin)     &= ~BIT6;
     *(((LCD*)lcd)->_enable_pin) &= ~BIT6;
 
-    //put the LCD into 4 bit or 8 bit mode
+    // Wake up Procedure
+    // put the LCD into 4 bit or 8 bit mode
     if(!( (((LCD*)lcd)->_displayfunction) & LCD_8BITMODE ))
     {
 
         // we start in 8bit mode, try to set 4 bit mode
         write4bits(lcd, 0x03);
-        __delay_cycles(DELAY4_1MS);
+        __delay_cycles(DELAY100MS);
 
         // second try
         write4bits(lcd, 0x03);
-        __delay_cycles(DELAY4_1MS);
+        __delay_cycles(DELAY100MS);
 
         // third go!
         write4bits(lcd, 0x03);
-        __delay_cycles(150);
+        __delay_cycles(DELAY100MS);
 
         // finally, set to 4-bit interface
-        write4bits(lcd, 0x02);
+        write4bits(lcd, 0x03);
     }
     else
     {
-        // this is according to the hitachi HD44780 datasheet
-        // page 45 figure 23
-
         // Send function set command sequence
         command(lcd, LCD_FUNCTIONSET | (((LCD*)lcd)->_displayfunction) );
-        __delay_cycles(DELAY4_1MS);
+        __delay_cycles(DELAY100MS);
 
         // second try
         command(lcd, LCD_FUNCTIONSET | (((LCD*)lcd)->_displayfunction) );
-        __delay_cycles(DELAY4_1MS);
+        __delay_cycles(DELAY100MS);
 
         // third go
         command(lcd, LCD_FUNCTIONSET | (((LCD*)lcd)->_displayfunction) );
@@ -110,7 +108,7 @@ void begin_LCD(void *lcd, uint8_t cols, uint8_t lines, uint8_t dotsize)
     command(lcd, LCD_FUNCTIONSET | (((LCD*)lcd)->_displayfunction) );
 
     // turn the display on with no cursor or blinking default
-    ((LCD*)lcd)->_displaycontrol = LCD_DISPLAYON | LCD_CURSOROFF | LCD_BLINKOFF;
+    ((LCD*)lcd)->_displaycontrol = LCD_DISPLAYON | LCD_CURSORON | LCD_BLINKON;
     display(lcd);
 
     // clear it off
@@ -123,7 +121,7 @@ void begin_LCD(void *lcd, uint8_t cols, uint8_t lines, uint8_t dotsize)
     command(lcd, LCD_ENTRYMODESET | (((LCD*)lcd)->_displaymode) );
 }
 
-void setRowOffsets(void *lcd, int row0, int row1, int row2, int row3)
+void setRowOffsets(void *lcd, uint8_t row0, uint8_t row1, uint8_t row2, uint8_t row3)
 {
   ((LCD*)lcd)->_row_offsets[0] = row0;
   ((LCD*)lcd)->_row_offsets[1] = row1;
@@ -133,7 +131,7 @@ void setRowOffsets(void *lcd, int row0, int row1, int row2, int row3)
 
 void setup_LCD_Pins(void)
 {
-    uint16_t DATA_BIT = 0;
+    uint8_t DATA_BIT = 0;
 
     /* control bits                 */
     P6->DIR  |=  BIT7;  // RS 6.7
@@ -191,9 +189,9 @@ void setup_LCD_Pins(void)
     P1->SEL0 &= ~DATA_BIT;
 }
 
-uint16_t get_data_pin_bit(uint8_t bit_index)
+uint8_t get_data_pin_bit(uint8_t bit_index)
 {
-    uint16_t DATA_BIT = 0;
+    uint8_t DATA_BIT = 0;
     switch(bit_index)
     {
         case 0:
@@ -225,6 +223,42 @@ uint16_t get_data_pin_bit(uint8_t bit_index)
             break;
     }
     return DATA_BIT;
+}
+
+uint8_t get_shift_amount(uint8_t bit_index)
+{
+    uint8_t shift = 0;
+    switch(bit_index)
+    {
+        case BIT0:
+            shift = 0;
+            break;
+        case BIT1:
+            shift = 1;
+            break;
+        case BIT2:
+            shift = 2;
+            break;
+        case BIT3:
+            shift = 3;
+            break;
+        case BIT4:
+            shift = 4;
+            break;
+        case BIT5:
+            shift = 5;
+            break;
+        case BIT6:
+            shift = 6;
+            break;
+        case BIT7:
+            shift = 7;
+            break;
+        default:
+            shift = 0;
+            break;
+    }
+    return shift;
 }
 
 /********** high level commands, for the user! */
@@ -279,6 +313,8 @@ void send(void *lcd, uint8_t value, uint8_t mode) {
 
     *(((LCD*)lcd)->_rw_pin) &= ~BIT6;
 
+    write8bits(lcd, value);
+    /*
     if( (((LCD*)lcd)->_displayfunction) & LCD_8BITMODE )
     {
         write8bits(lcd, value);
@@ -288,6 +324,7 @@ void send(void *lcd, uint8_t value, uint8_t mode) {
         write4bits(lcd, value>>4);
         write4bits(lcd, value);
     }
+    */
 }
 
 void pulseEnable(void *lcd)
@@ -296,23 +333,25 @@ void pulseEnable(void *lcd)
     __delay_cycles(1);
 
     *(((LCD*)lcd)->_enable_pin) |= BIT6;
-    __delay_cycles(1);      // enable pulse must be >450ns
+    __delay_cycles(2);      // enable pulse must be >450ns
 
     *(((LCD*)lcd)->_enable_pin) &= ~BIT6;
-    __delay_cycles(100);    // commands need > 37us to settle
+    __delay_cycles(1);    // commands need > 37us to settle
 }
 
 void write4bits(void *lcd, uint8_t value)
 {
     uint8_t have;
+    uint8_t have_pin;
     uint8_t want;
 
     uint8_t i;
     for(i = 0; i < 4; i++)
     {
         // Retrieve the relevant bit
-        have = (*(((LCD*)lcd)->_data_pins[i])) & get_data_pin_bit(i);
-        want = value & get_data_pin_bit(i);
+        have_pin = get_data_pin_bit(i);
+        have = ((*(((LCD*)lcd)->_data_pins[i])) & have_pin) >> get_shift_amount(have_pin);
+        want = (value >> i) & 0x01;
 
         if(have != want) // check, are relevant bits different?
         {
@@ -333,14 +372,16 @@ void write4bits(void *lcd, uint8_t value)
 void write8bits(void *lcd, uint8_t value)
 {
     uint8_t have;
+    uint8_t have_pin;
     uint8_t want;
 
     uint8_t i;
     for(i = 0; i < 8; i++)
     {
         // Retrieve the relevant bit
-        have = (*(((LCD*)lcd)->_data_pins[i])) & get_data_pin_bit(i);
-        want = value & get_data_pin_bit(i);
+        have_pin = get_data_pin_bit(i);
+        have = ((*(((LCD*)lcd)->_data_pins[i])) & have_pin) >> get_shift_amount(have_pin);
+        want = (value >> i) & 0x01;
 
         if(have != want) // check, are relevant bits different?
         {

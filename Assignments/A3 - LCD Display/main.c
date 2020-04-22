@@ -11,7 +11,7 @@
 
 void main(void)
 {
-	// WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;		// stop watchdog timer
+	__delay_cycles(DELAY50MS);
 
     // construct lcd
     void *lcd;
@@ -23,22 +23,27 @@ void main(void)
     clear(lcd);
     // noDisplay(lcd);
 
-    write(lcd , 0x33);
+    // send(lcd , 0x55, REGISTER);
 
     setup_RED_LED();
 
-    int i;
-    for(i = 0; i<200; i++)
+    uint8_t i;
+    for(i = 0x00; i<0xFF; i++)
+    //while(1)
     {
-
         // P4->OUT = ~P4->OUT;
         P1->OUT |= (BIT0);          /* turn on  P1.0 red LED */
         delay_us(DELAY40ms);
+
+        write(lcd , i);
+        // noDisplay(lcd);
 
         // P4->OUT = ~P4->OUT;
         P1->OUT &= ~(BIT0);         /* turn off P1.0 red LED */
         delay_us(DELAY40ms);
     }
+
+    clear(lcd);
 
     destroy_LCD(lcd);
 }
