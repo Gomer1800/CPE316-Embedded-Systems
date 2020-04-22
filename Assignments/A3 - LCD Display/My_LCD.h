@@ -12,19 +12,23 @@
 #include  "STDINT.H"        // definition of uint32_t
 #include <stdlib.h>
 
+// flags for constructor_LCD
+#define NIBBLE_ON   ((uint8_t)0x01)
+#define NIBBLE_OFF  ((uint8_t)0x00)
+
 // flags for function set
-#define LCD_8BITMODE 0x10
-#define LCD_4BITMODE 0x00
-#define LCD_2LINE 0x08
-#define LCD_1LINE 0x00
-#define LCD_5x10DOTS 0x04
-#define LCD_5x8DOTS 0x00
+#define LCD_8BITMODE    ((uint8_t)0x10)
+#define LCD_4BITMODE    ((uint8_t)0x00)
+#define LCD_2LINE       ((uint8_t)0x08)
+#define LCD_1LINE       ((uint8_t)0x00)
+#define LCD_5x10DOTS    ((uint8_t)0x04)
+#define LCD_5x8DOTS     ((uint8_t)0x00)
 
 typedef struct{
-    uint8_t _rs_pin;        // LOW: command.  HIGH: character.
-    uint8_t _rw_pin;        // LOW: write to LCD.  HIGH: read from LCD.
-    uint8_t _enable_pin;    // activated by a HIGH pulse.
-    uint8_t _data_pins[8];
+    volatile uint8_t* _rs_pin;        // LOW: command.  HIGH: character.
+    volatile uint8_t* _rw_pin;        // LOW: write to LCD.  HIGH: read from LCD.
+    // uint8_t* _enable_pin;    // activated by a HIGH pulse.
+    volatile uint8_t* _data_pins[8];
 
     uint8_t _displayfunction;
     uint8_t _displaycontrol;
@@ -37,12 +41,11 @@ typedef struct{
 
 } LCD;
 
-void* constructor_LCD(
-        uint8_t fourbitmode, uint8_t rs, uint8_t rw, uint8_t enable,
-        uint8_t d0, uint8_t d1, uint8_t d2, uint8_t d3,
-        uint8_t d4, uint8_t d5, uint8_t d6, uint8_t d7);
+void* constructor_LCD(uint8_t fourbitmode);
 
-// void begin_LCD(void *lcd, uint8_t cols, uint8_t lines, uint8_t dotsize);
+void begin_LCD(void *lcd, uint8_t cols, uint8_t lines, uint8_t dotsize);
+
+void setRowOffsets(void *lcd, int row1, int row2, int row3, int row4);
 
 // void destroy_LCD(void *lcd);
 
