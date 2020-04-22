@@ -249,12 +249,12 @@ void display(void *lcd)
 
 /*********** mid level commands, for sending data/cmds */
 
-inline void command(void *lcd, uint8_t value)
+void command(void *lcd, uint8_t value)
 {
     send(lcd, value, COMMAND);
 }
 
-inline size_t write(void *lcd, uint8_t value)
+size_t write(void *lcd, uint8_t value)
 {
     send(lcd, value, REGISTER);
     return 1; // assume success
@@ -304,10 +304,27 @@ void pulseEnable(void *lcd)
 
 void write4bits(void *lcd, uint8_t value)
 {
+    uint8_t have;
+    uint8_t want;
+
     uint8_t i;
     for(i = 0; i < 4; i++)
     {
-        *(((LCD*)lcd)->_data_pins[i]) |= ((value >> i) & 0x01);
+        // Retrieve the relevant bit
+        have = (*(((LCD*)lcd)->_data_pins[i])) & get_data_pin_bit(i);
+        want = value & get_data_pin_bit(i);
+
+        if(have != want) // check, are relevant bits different?
+        {
+            if (have > 0)
+            {   // Toggling from high to low
+                (*(((LCD*)lcd)->_data_pins[i])) &= ~(get_data_pin_bit(i));
+            }
+            else
+            {   // Toggling from low to high
+                (*(((LCD*)lcd)->_data_pins[i])) |= get_data_pin_bit(i);
+            }
+        }
     }
 
     pulseEnable(lcd);
@@ -315,10 +332,27 @@ void write4bits(void *lcd, uint8_t value)
 
 void write8bits(void *lcd, uint8_t value)
 {
+    uint8_t have;
+    uint8_t want;
+
     uint8_t i;
     for(i = 0; i < 8; i++)
     {
-        *(((LCD*)lcd)->_data_pins[i]) |= ((value >> i) & 0x01);
+        // Retrieve the relevant bit
+        have = (*(((LCD*)lcd)->_data_pins[i])) & get_data_pin_bit(i);
+        want = value & get_data_pin_bit(i);
+
+        if(have != want) // check, are relevant bits different?
+        {
+            if (have > 0)
+            {   // Toggling from high to low
+                (*(((LCD*)lcd)->_data_pins[i])) &= ~(get_data_pin_bit(i));
+            }
+            else
+            {   // Toggling from low to high
+                (*(((LCD*)lcd)->_data_pins[i])) |= get_data_pin_bit(i);
+            }
+        }
     }
 
     pulseEnable(lcd);
