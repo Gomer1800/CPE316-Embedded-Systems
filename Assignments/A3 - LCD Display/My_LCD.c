@@ -113,7 +113,7 @@ void begin_LCD(void *lcd, uint8_t cols, uint8_t lines, uint8_t dotsize)
     display(lcd);
 
     // clear it off
-    clear(lcd);
+    clear_LCD(lcd);
 
     // Initialize to default text direction (for romance languages)
     (((LCD*)lcd)->_displaymode) = LCD_ENTRYLEFT | LCD_ENTRYSHIFTDECREMENT;
@@ -264,10 +264,16 @@ uint8_t get_shift_amount(uint8_t bit_index)
 
 /********** high level commands, for the user! */
 
-void clear(void *lcd)
+void clear_LCD(void *lcd)
 {
     command(lcd, LCD_CLEARDISPLAY);  // clear display, set cursor position to zero
     __delay_cycles(DELAY2MS);    // this command takes a long time!
+}
+
+void home_LCD(void *lcd)
+{
+  command(lcd, LCD_RETURNHOME);  // set cursor position to zero
+  __delay_cycles(DELAY2MS);  // this command takes a long time!
 }
 
 // Turn the display on/off (quickly)
@@ -280,6 +286,23 @@ void display(void *lcd)
 {
     (((LCD*)lcd)->_displaycontrol) |= LCD_DISPLAYON;
     command( lcd, LCD_DISPLAYCONTROL | (((LCD*)lcd)->_displaycontrol) );
+}
+
+void write_char_LCD(void *lcd, char my_char)
+{
+    write(lcd , get_char(my_char) );
+    //write(lcd , get_char(string[i]) );
+}
+
+void write_string_LCD(void *lcd, char *my_string)
+{
+    uint8_t i = 0;
+
+    while(my_string[i] != '\0')
+    {
+        write_char_LCD(lcd, my_string[i]);
+        i++;
+    }
 }
 
 /*********** mid level commands, for sending data/cmds */

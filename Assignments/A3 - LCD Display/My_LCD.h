@@ -92,19 +92,25 @@ uint8_t get_shift_amount(uint8_t);
 
 /********** high level commands, for the user! */
 
-void clear(void *lcd);
+void clear_LCD  (void *lcd);
 
-void noDisplay(void *lcd);
+void home_LCD   (void *lcd);
 
-void display(void *lcd);
+void noDisplay  (void *lcd);
 
-uint8_t get_char(char);
+void display    (void *lcd);
+
+void write_char_LCD     (void *lcd, char);
+
+void write_string_LCD   (void *lcd, char*);
 
 /*********** mid level commands, for sending data/cmds */
 
 inline void command(void *lcd, uint8_t value);
 
 inline size_t write(void *lcd, uint8_t value);
+
+uint8_t get_char(char);
 
 /************ low level data pushing commands **********/
 

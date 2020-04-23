@@ -14,7 +14,8 @@
 // Delay constants
 
 // Seconds
-#define DELAY1S                 ((uint32_t)1000000) // 1s
+#define DELAY10S                 ((uint32_t)10000000)   // 10s
+#define DELAY1S                 ((uint32_t)1000000)     // 1s
 
 // Milliseconds
 #define DELAY100MS              ((uint32_t)100000)  // 100ms
