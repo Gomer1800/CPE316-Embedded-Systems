@@ -106,7 +106,7 @@ void begin_LCD(void *lcd, uint8_t cols, uint8_t lines, uint8_t dotsize)
     // finally, set # lines, font size, etc.
     command(lcd, LCD_FUNCTIONSET | (((LCD*)lcd)->_displayfunction) );
 
-    // turn the display on with no cursor or blinking default
+    // turn the display on with cursor & blinking default
     ((LCD*)lcd)->_displaycontrol = LCD_DISPLAYON | LCD_CURSORON | LCD_BLINKON;
     display(lcd);
 
@@ -274,6 +274,19 @@ void home_LCD(void *lcd)
   __delay_cycles(DELAY2MS);  // this command takes a long time!
 }
 
+void set_cursor_LCD(void *lcd, uint8_t col, uint8_t row)
+{
+  const size_t max_lines = sizeof(((LCD*)lcd)->_row_offsets) / sizeof( *(((LCD*)lcd)->_row_offsets) );
+  if ( row >= max_lines ) {
+    row = max_lines - 1;    // we count rows starting w/0
+  }
+  if ( row >= ((LCD*)lcd)->_numlines ) {
+    row = ((LCD*)lcd)->_numlines - 1;    // we count rows starting w/0
+  }
+
+  command(lcd, LCD_SETDDRAMADDR | (col + (((LCD*)lcd)->_row_offsets)[row]));
+}
+
 // Turn the display on/off (quickly)
 void noDisplay(void *lcd)
 {
@@ -294,12 +307,12 @@ void write_char_LCD(void *lcd, char my_char)
 
 void write_string_LCD(void *lcd, char *my_string)
 {
-    uint8_t i = 0;
+    uint32_t i = 0;
 
     while(my_string[i] != '\0')
     {
         write_char_LCD(lcd, my_string[i]);
-        i++;
+        i = i + 1;
     }
 }
 
@@ -323,7 +336,13 @@ uint8_t get_char(char my_char)
     uint8_t byte;
     switch(my_char)
     {
-        case '0':
+        case ' ':
+            byte = 0x20;
+            break;
+        case '!':
+            byte = 0x21;
+            break;
+        case '0':               // Decimal Numbers
             byte = 0x30;
             break;
         case '1':
@@ -358,6 +377,110 @@ uint8_t get_char(char my_char)
             break;
         case '*':
             byte = 0x2A;
+            break;
+        case 'A':               // alphabet
+        case 'a':
+            byte = 0x41;
+            break;
+        case 'B':
+        case 'b':
+            byte = 0x42;
+            break;
+        case 'C':
+        case 'c':
+            byte = 0x43;
+            break;
+        case 'D':
+        case 'd':
+            byte = 0x44;
+            break;
+        case 'E':
+        case 'e':
+            byte = 0x45;
+            break;
+        case 'F':
+        case 'f':
+            byte = 0x46;
+            break;
+        case 'G':
+        case 'g':
+            byte = 0x47;
+            break;
+        case 'H':
+        case 'h':
+            byte = 0x48;
+            break;
+        case 'I':
+        case 'i':
+            byte = 0x49;
+            break;
+        case 'J':
+        case 'j':
+            byte = 0x4A;
+            break;
+        case 'K':
+        case 'k':
+            byte = 0x4B;
+            break;
+        case 'L':
+        case 'l':
+            byte = 0x4C;
+            break;
+        case 'M':
+        case 'm':
+            byte = 0x4D;
+            break;
+        case 'N':
+        case 'n':
+            byte = 0x4E;
+            break;
+        case 'O':
+        case 'o':
+            byte = 0x4F;
+            break;
+        case 'P':
+        case 'p':
+            byte = 0x50;
+            break;
+        case 'Q':
+        case 'q':
+            byte = 0x51;
+            break;
+        case 'R':
+        case 'r':
+            byte = 0x52;
+            break;
+        case 'S':
+        case 's':
+            byte = 0x53;
+            break;
+        case 'T':
+        case 't':
+            byte = 0x54;
+            break;
+        case 'U':
+        case 'u':
+            byte = 0x55;
+            break;
+        case 'V':
+        case 'v':
+            byte = 0x56;
+            break;
+        case 'W':
+        case 'w':
+            byte = 0x57;
+            break;
+        case 'X':
+        case 'x':
+            byte = 0x58;
+            break;
+        case 'Y':
+        case 'y':
+            byte = 0x59;
+            break;
+        case 'Z':
+        case 'z':
+            byte = 0x5A;
             break;
         default: // '?' , notifies user with a ? that unknown char given
             byte = 0x3F;

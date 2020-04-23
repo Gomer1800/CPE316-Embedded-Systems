@@ -65,8 +65,6 @@ typedef struct {
     uint8_t _displaycontrol;
     uint8_t _displaymode;
 
-    // uint8_t _initialized;
-
     uint8_t _numlines;
     uint8_t _row_offsets[4];
 
@@ -90,6 +88,7 @@ uint8_t get_shift_amount(uint8_t);
 
 void clear_LCD          (void *lcd);
 void home_LCD           (void *lcd);
+void set_cursor_LCD(void *, uint8_t, uint8_t);
 
 void noDisplay          (void *lcd);
 void display            (void *lcd);
