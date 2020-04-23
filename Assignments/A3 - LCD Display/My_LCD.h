@@ -9,8 +9,8 @@
 #define MY_LCD_H_
 
 #include "msp.h"
-#include  "STDINT.H"        // definition of uint32_t
-#include <stdlib.h>
+#include "STDINT.H"         // definition of uint32_t
+#include <stdlib.h>         // definition of size_t
 
 // flags for constructor_digital I/0
 #define NIBBLE      ((uint8_t)0xFF)
@@ -74,56 +74,41 @@ typedef struct {
 
 /******** constructor & destructor ********/
 
-void* constructor_LCD(uint8_t fourbitmode);
-
-void destroy_LCD(void *lcd);
+void*   constructor_LCD (uint8_t fourbitmode);
+void    destroy_LCD     (void *lcd);
 
 /******** setup ********/
 
-void begin_LCD(void *lcd, uint8_t cols, uint8_t lines, uint8_t dotsize);
-
-void setRowOffsets(void *lcd, uint8_t row1, uint8_t row2, uint8_t row3, uint8_t row4);
-
-void setup_LCD_Pins(void);
+void begin_LCD          (void *lcd, uint8_t cols, uint8_t lines, uint8_t dotsize);
+void setRowOffsets      (void *lcd, uint8_t row1, uint8_t row2, uint8_t row3, uint8_t row4);
+void setup_LCD_Pins     (void);
 
 uint8_t get_data_pin_bit(uint8_t);
-
 uint8_t get_shift_amount(uint8_t);
 
 /********** high level commands, for the user! */
 
-void clear_LCD  (void *lcd);
+void clear_LCD          (void *lcd);
+void home_LCD           (void *lcd);
 
-void home_LCD   (void *lcd);
-
-void noDisplay  (void *lcd);
-
-void display    (void *lcd);
-
+void noDisplay          (void *lcd);
+void display            (void *lcd);
 void write_char_LCD     (void *lcd, char);
-
 void write_string_LCD   (void *lcd, char*);
 
 /*********** mid level commands, for sending data/cmds */
 
-inline void command(void *lcd, uint8_t value);
+inline void command (void *lcd, uint8_t value);
+inline size_t write (void *lcd, uint8_t value);
 
-inline size_t write(void *lcd, uint8_t value);
-
-uint8_t get_char(char);
+uint8_t get_char    (char);
 
 /************ low level data pushing commands **********/
 
 // write either command or data, with automatic 4/8-bit selection
-
-void send(void *lcd, uint8_t value, uint8_t mode);
-
+void send       (void *lcd, uint8_t value, uint8_t mode);
 void pulseEnable(void *lcd);
-
-void write4bits(void *lcd, uint8_t);
-
-void write8bits(void *lcd, uint8_t);
-
-void destroy_LCD(void *lcd);
+void write4bits (void *lcd, uint8_t);
+void write8bits (void *lcd, uint8_t);
 
 #endif /* MY_LCD_H_ */
