@@ -107,8 +107,8 @@ uint8_t get_char    (char);
 
 // write either command or data, with automatic 4/8-bit selection
 void send       (void *lcd, uint8_t value, uint8_t mode);
-void pulseEnable(void *lcd);
 void write4bits (void *lcd, uint8_t);
 void write8bits (void *lcd, uint8_t);
+void pulseEnable(void *lcd);
 
 #endif /* MY_LCD_H_ */
