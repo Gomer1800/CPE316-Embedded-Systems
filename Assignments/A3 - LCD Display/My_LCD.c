@@ -4,9 +4,7 @@
  * My_LCD.c
  *
  *  Created on: Apr 21, 2020
- *
- *      Adapted from the Arduino Liquid Crystal library
- *      & ported to C by Luis Gomez
+ *      Author: Luis Gomez
  */
 
 /******** constructor & destructor ********/
