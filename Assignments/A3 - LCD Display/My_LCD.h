@@ -18,14 +18,6 @@
 #define REGISTER    ((uint8_t)0xFF)
 #define COMMAND     ((uint8_t)0x00)
 
-// Delay Constant
-#define DELAY1S     1000000 // 1s
-#define DELAY100MS  100000  // 100ms
-#define DELAY50MS   50000   // 50ms
-#define DELAY5MS    5000    // 5ms
-#define DELAY4_1MS  4500    // 4.1ms
-#define DELAY2MS    2000    // 2ms
-
 // commands
 #define LCD_CLEARDISPLAY    0x01
 #define LCD_RETURNHOME      0x02

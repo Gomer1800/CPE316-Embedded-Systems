@@ -1,4 +1,5 @@
 #include "My_LCD.h"
+#include "My_Delays.h"
 /*
  * My_LCD.c
  *
@@ -386,6 +387,7 @@ void pulseEnable(void *lcd)
     __delay_cycles(1);    // commands need > 37us to settle
 }
 
+// TODO(Luis): This doesn't work, has a bug somewhere
 void write4bits(void *lcd, uint8_t value)
 {
     uint8_t have;

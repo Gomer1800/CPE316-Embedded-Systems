@@ -11,6 +11,10 @@
 
 void main(void)
 {
+    setup_DCO(FREQ_3MHZ);
+
+    setup_MCLK_to_DCO();
+
 	__delay_cycles(DELAY50MS);
 
     // construct lcd
@@ -21,29 +25,27 @@ void main(void)
     begin_LCD(lcd, 16, 1, LCD_5x8DOTS);
 
     clear(lcd);
-    // noDisplay(lcd);
-
-    // send(lcd , 0x55, REGISTER);
 
     setup_RED_LED();
 
+    // test string for output
     char* string = "1234567890#*";
+
     uint8_t i;
     for(i = 0x00; i<0x0D; i++)
-    //while(1)
     {
         // P4->OUT = ~P4->OUT;
         P1->OUT |= (BIT0);          /* turn on  P1.0 red LED */
-        delay_us(DELAY40ms);
+        delay_us(DELAY40MS);
 
         write(lcd , get_char(string[i]));
-        //write(lcd , i);
-        // noDisplay(lcd);
 
         // P4->OUT = ~P4->OUT;
         P1->OUT &= ~(BIT0);         /* turn off P1.0 red LED */
-        delay_us(DELAY40ms);
+        delay_us(DELAY40MS);
     }
+
+    delay_us(15*DELAY1S);
 
     clear(lcd);
 

@@ -12,8 +12,22 @@
 #include  "STDINT.H" // definition of uint32_t
 
 // Delay constants
-#define DELAY40ms               ((uint32_t)40000) // 40 milliseconds
+
+// Seconds
+#define DELAY1S                 ((uint32_t)1000000) // 1s
+
+// Milliseconds
+#define DELAY100MS              ((uint32_t)100000)  // 100ms
+#define DELAY50MS               ((uint32_t)50000)   // 50ms
+#define DELAY40MS               ((uint32_t)40000)   // 40ms
+#define DELAY5MS                ((uint32_t)5000)    // 5ms
+#define DELAY4_1MS              ((uint32_t)4500)    // 4.1ms
+#define DELAY2MS                ((uint32_t)2000)    // 2ms
+
+// Microseconds
 #define DELAY40us               ((uint32_t)40)    // 40 microseconds
+
+// Math Constants
 #define FLOATING_POINT_DIVISOR  ((uint32_t)10000) // used to avoid floating point conversion errors
 
 // Slopes from our data trend-lines on excel
