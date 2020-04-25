@@ -4,6 +4,10 @@
 #include "My_LEDS.h"
 #include "My_Delays.h"
 
+#include "STDINT.H"         // definition of uint32_t
+
+#define LCD_COLUMNS     ((uint8_t)0x10) // 16   columns
+#define LCD_ROWS        ((uint8_t)0x02) // 2    rows
 /**
  * main.c
  *
@@ -11,26 +15,20 @@
 
 void main(void)
 {
-    setup_DCO(FREQ_3MHZ);
-    setup_MCLK_to_DCO();
-
     // Wait for LCD to power up to at least 4.5 V
     __delay_cycles(DELAY50MS);
 
-    // construct lcd
+    /***** LCD INITIALIZATION *****/
     void *lcd;
-    lcd = constructor_LCD(BYTE);
-    // set up the LCD's number of columns and rows:
-    begin_LCD(lcd, 16, 2, LCD_5x8DOTS);
+    lcd = constructor_LCD(BYTE, P4);
+    begin_LCD(lcd, LCD_COLUMNS, LCD_ROWS, LCD_5x8DOTS);
     clear_LCD(lcd);
 
-    setup_RED_LED();
-
-    // test string for output
+    /***** WRITING TO LCD *****/
     char* my_string1 = "Hello World!";
     char* my_string2 = "Assignment 3";
 
-    __delay_cycles(DELAY2MS);
+    __delay_cycles(DELAY2MS); // needed while string is loaded
 
     write_string_LCD(lcd, my_string1);
 
@@ -38,14 +36,17 @@ void main(void)
 
     write_string_LCD(lcd, my_string2);
 
+    /***** LED LOOP *****/
+    setup_RED_LED();
+
     uint8_t i;
-    for(i = 0x00; i<0x0D; i++)
+    for(i=0; i<0xFF; i++)
     {
         P1->OUT |= (BIT0);          /* turn on  P1.0 red LED */
-        __delay_cycles(DELAY40MS);
+        __delay_cycles(DELAY100MS);
 
         P1->OUT &= ~(BIT0);         /* turn off P1.0 red LED */
-        __delay_cycles(DELAY40MS);
+        __delay_cycles(DELAY100MS);
     }
 
     destroy_LCD(lcd);
