@@ -12,6 +12,8 @@
 #include "STDINT.H"         // definition of uint32_t
 #include <stdlib.h>         // definition of size_t
 
+#include "My_Pins.h"
+
 // flags for constructor_digital I/0
 #define NIBBLE      ((uint8_t)0xFF)
 #define BYTE        ((uint8_t)0x00)
@@ -54,7 +56,11 @@
 #define LCD_5x11DOTS    ((uint8_t)0x04)
 #define LCD_5x8DOTS     ((uint8_t)0x00)
 
+/******** LCD Struct Declaration ********/
+
 typedef struct {
+    DIO_PORT_Even_Interruptable_Type *_data_port;
+
     volatile uint8_t* _rs_pin;        // LOW: command.  HIGH: character.
     volatile uint8_t* _rw_pin;        // LOW: write to LCD.  HIGH: read from LCD.
     volatile uint8_t* _enable_pin;    // activated by a HIGH pulse.
@@ -72,14 +78,13 @@ typedef struct {
 
 /******** constructor & destructor ********/
 
-void*   constructor_LCD (uint8_t fourbitmode);
+void*   constructor_LCD (uint8_t fourbitmode, DIO_PORT_Even_Interruptable_Type *port);
 void    destroy_LCD     (void *lcd);
 
 /******** setup ********/
 
 void begin_LCD          (void *lcd, uint8_t cols, uint8_t lines, uint8_t dotsize);
 void setRowOffsets      (void *lcd, uint8_t row1, uint8_t row2, uint8_t row3, uint8_t row4);
-void setup_LCD_Pins     (void);
 
 uint8_t get_data_pin_bit(uint8_t);
 uint8_t get_shift_amount(uint8_t);
