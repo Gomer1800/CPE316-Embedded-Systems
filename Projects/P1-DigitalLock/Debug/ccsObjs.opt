@@ -1,0 +1,1 @@
+"./My_DCO.obj" "./My_Delays.obj" "./My_LCD.obj" "./My_LEDS.obj" "./My_Pins.obj" "./keypad.obj" "./main.obj" "./startup_msp432p401r_ccs.obj" "./system_msp432p401r.obj" "../msp432p401r.cmd" -llibc.a 
