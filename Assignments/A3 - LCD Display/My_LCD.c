@@ -230,6 +230,40 @@ void display(void *lcd)
     command( lcd, LCD_DISPLAYCONTROL | (((LCD*)lcd)->_displaycontrol) );
 }
 
+void scrollDisplayLeft  (void *lcd)
+{
+    command(lcd, LCD_CURSORSHIFT | LCD_DISPLAYMOVE | LCD_MOVELEFT);
+}
+
+void scrollDisplayRight (void *lcd)
+{
+    command(lcd, LCD_CURSORSHIFT | LCD_DISPLAYMOVE | LCD_MOVERIGHT);
+}
+
+void leftToRight        (void *lcd)
+{
+    ((LCD*)lcd)->_displaymode |= LCD_ENTRYLEFT;
+    command(lcd, LCD_ENTRYMODESET | ((LCD*)lcd)->_displaymode);
+}
+
+void rightToLeft        (void *lcd)
+{
+    ((LCD*)lcd)->_displaymode &= ~LCD_ENTRYLEFT;
+    command(lcd, LCD_ENTRYMODESET | ((LCD*)lcd)->_displaymode);
+}
+
+void autoscroll         (void *lcd)
+{
+    ((LCD*)lcd)->_displaymode |= LCD_ENTRYSHIFTINCREMENT;
+    command(lcd, LCD_ENTRYMODESET | ((LCD*)lcd)->_displaymode);
+}
+
+void noAutoscroll       (void *lcd)
+{
+    ((LCD*)lcd)->_displaymode &= ~LCD_ENTRYSHIFTINCREMENT;
+    command(lcd, LCD_ENTRYMODESET | ((LCD*)lcd)->_displaymode);
+}
+
 void write_char_LCD(void *lcd, char my_char)
 {
     write(lcd , get_char(my_char) );
