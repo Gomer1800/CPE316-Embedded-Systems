@@ -8,18 +8,16 @@
 #include "keypad.h"
 #include "My_LCD.h"
 #include "My_Delays.h"
+#include "lock.h"
 #include <string.h>
 
-char savedPin[ARR_LENGTH];
-uint32_t count;
-enum BOOL isLocked;
+
 
 void setup_keypad(void) {
     WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD; // watchdog
 
     //set the amount of chars input to zero
     count = 0;
-    isLocked = true;
 
     // set columns as GPIO (P4.4, P4.5, P4.6)
     P4->SEL1 &= ~COLBITS;
@@ -51,44 +49,13 @@ void determine_key(uint8_t row) {
     uint8_t output = '?';
     uint8_t col;
     uint8_t c = 1;
-    uint32_t index = count % 4;
     for (col = BIT4; col < BIT7; col = col << 1) {
         P4->OUT &= ~COLBITS;
         P4->OUT |= col; // turn on one column
         delay_us(DELAY25MS);
         if (check_row(row)) { // check if the row is still high
             output = get_key(c, row);  // the correct key is at (col, row)
-            if(output == '*'){
-                display_menu_LCD();
-                isLocked = true;
-                count = 0;
-            }
-            else{
-                savedPin[index] = output;
-                if((output != '?') && ((count/PIN_LENGTH) != 1) && isLocked){ //if the count == 3 then call compare function
-                    write_char_LCD(lcd, output);
-                    count++;
-                }
-                if(count == 4){
-                    savedPin[count] = '\0';
-                    if(strcmp(savedPin, CORRECT_PIN) == 0){
-                        count = 0;
-                        clear_LCD(lcd);
-                        delay_us(DELAY2MS);
-                        write_string_LCD(lcd, UNLOCKED);
-                        moveTextLeft(13);
-                        moveTextRight(29);
-                        moveTextLeft(16);
-
-                       //end of scroll
-                        isLocked = false;
-                    }
-                    else{
-                        display_menu_LCD();
-                        count = 0;
-                    }
-                }
-            }
+            lock_input(output); // pass the output the the LCD and do lock logic
         }
         c++;
 
