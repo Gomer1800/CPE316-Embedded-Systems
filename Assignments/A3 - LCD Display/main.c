@@ -27,27 +27,45 @@ void main(void)
     /***** WRITING TO LCD *****/
     char* my_string1 = "Hello World!";
     char* my_string2 = "Assignment 3";
-
-    __delay_cycles(DELAY2MS); // needed while string is loaded
+    __delay_cycles(DELAY2MS);           // needed while string is loaded
 
     write_string_LCD(lcd, my_string1);
 
     set_cursor_LCD(lcd, 0, 1);
-
     write_string_LCD(lcd, my_string2);
 
-    /***** LED LOOP *****/
-    setup_RED_LED();
+    /***** SCROLL *****/
+    int positionCounter;
+    for(positionCounter = 0; positionCounter < 13; positionCounter++) {
+      // scroll one position left:
+      scrollDisplayLeft(lcd);
+      // wait a bit:
+      __delay_cycles(DELAY500MS);
+    }
 
-    uint8_t i;
-    for(i=0; i<0xFF; i++)
-    {
-        P1->OUT |= (BIT0);          /* turn on  P1.0 red LED */
-        __delay_cycles(DELAY100MS);
+    // scroll 29 positions (string length + display length) to the right
+    // to move it offscreen right:
+    for (positionCounter = 0; positionCounter < 29; positionCounter++) {
+      // scroll one position right:
+      scrollDisplayRight(lcd);
+      // wait a bit:
+      __delay_cycles(DELAY500MS);
+    }
 
-        P1->OUT &= ~(BIT0);         /* turn off P1.0 red LED */
-        __delay_cycles(DELAY100MS);
+    // scroll 16 positions (display length + string length) to the left
+    // to move it back to center:
+    for (positionCounter = 0; positionCounter < 16; positionCounter++) {
+      // scroll one position left:
+      scrollDisplayLeft(lcd);
+      // wait a bit:
+      __delay_cycles(DELAY500MS);
     }
 
     destroy_LCD(lcd);
+
+    /***** LED BLINK *****/
+    setup_RED_LED();
+
+    P1->OUT |= (BIT0);          /* turn on  P1.0 red LED */
+    __delay_cycles(DELAY100MS);
 }

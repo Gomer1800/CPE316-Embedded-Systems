@@ -20,6 +20,10 @@
 #define REGISTER    ((uint8_t)0xFF)
 #define COMMAND     ((uint8_t)0x00)
 
+// flags for constructor_LCD
+#define NIBBLE_ON   ((uint8_t)0x01)
+#define NIBBLE_OFF  ((uint8_t)0x00)
+
 // commands
 #define LCD_CLEARDISPLAY    0x01
 #define LCD_RETURNHOME      0x02
@@ -44,9 +48,11 @@
 #define LCD_BLINKON     0x01
 #define LCD_BLINKOFF    0x00
 
-// flags for constructor_LCD
-#define NIBBLE_ON   ((uint8_t)0x01)
-#define NIBBLE_OFF  ((uint8_t)0x00)
+// flags for display/cursor shift
+#define LCD_DISPLAYMOVE 0x08
+//#define LCD_CURSORMOVE 0x00
+#define LCD_MOVERIGHT 0x04
+#define LCD_MOVELEFT 0x00
 
 // flags for function set
 #define LCD_8BITMODE    ((uint8_t)0x10)
@@ -97,6 +103,15 @@ void set_cursor_LCD(void *, uint8_t, uint8_t);
 
 void noDisplay          (void *lcd);
 void display            (void *lcd);
+
+void scrollDisplayLeft  (void *lcd);
+void scrollDisplayRight (void *lcd);
+void leftToRight        (void *lcd);
+void rightToLeft        (void *lcd);
+void autoscroll         (void *lcd);
+void noAutoscroll       (void *lcd);
+
+
 void write_char_LCD     (void *lcd, char);
 void write_string_LCD   (void *lcd, char*);
 
@@ -111,6 +126,7 @@ uint8_t get_char    (char);
 
 // write either command or data, with automatic 4/8-bit selection
 void send       (void *lcd, uint8_t value, uint8_t mode);
+// TODO(Luis): nibble mode is bugged, fix this function or find the root cause of the bug
 void write4bits (void *lcd, uint8_t);
 void write8bits (void *lcd, uint8_t);
 void pulseEnable(void *lcd);
