@@ -43,7 +43,6 @@ void gen_triangle_wave(double vp, uint32_t period);
 
 void main(void)
 {
-    // Setup
 	WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;		// stop watchdog timer
 
     enum STATE PRESENT_STATE    = INIT;
@@ -54,13 +53,23 @@ void main(void)
         switch(PRESENT_STATE){
 
         case INIT:
+
+            /***** DCO INITIALIZATION *****/
+            setup_DCO(FREQ_3MHZ);
+            setup_MCLK_to_DCO();
+
             /***** LCD INITIALIZATION *****/
             __delay_cycles(DELAY50MS); // Wait for LCD to power up to at least 4.5 V
             lcd = constructor_LCD(BYTE, P6);
             begin_LCD(lcd, LCD_COLUMNS, LCD_ROWS, LCD_5x8DOTS);
             display_menu_LCD(lcd);
+
+            /***** DAC INITIALIZATION *****/
             init_spi(); // initializes eUSCI_B0 SPI for DAC
+
+            /***** KEYPAD INITIALIZATION *****/
             setup_keypad();
+
             NEXT_STATE = SQUARE;
             break;
 
