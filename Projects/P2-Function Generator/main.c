@@ -1,16 +1,18 @@
 #include "msp.h"
-//#include "My_Keypad.h"
-//#include "My_LCD.h"
-//#include "My_DCO.h"
-//#include "My_LEDS.h"
-//#include "My_Delays.h"
-
-// FSM STATES
-//enum STATE {INIT, RUN};
-
+#include "My_Keypad.h"
+#include "My_LCD.h"
+#include "My_DCO.h"
+#include "My_LEDS.h"
+#include "My_Delays.h"
+#include <My_DAC.h>
 /**
  * main.c
  */
+
+#define GRAN 50
+
+// FSM STATES
+enum STATE {INIT, IDLE, SQUARE, SAW, SINE};
 
 /*
 3.The function generator shall be capable of producing
@@ -36,34 +38,85 @@
 */
 void *lcd;
 
+void gen_square_wave(double vp, uint32_t period);
+void gen_triangle_wave(double vp, uint32_t period);
+
 void main(void)
 {
     // Setup
 	WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;		// stop watchdog timer
 
-    //enum STATE PRESENT_STATE    = INIT;
-    //enum STATE NEXT_STATE       = RUN;
+    enum STATE PRESENT_STATE    = INIT;
+    enum STATE NEXT_STATE       = SQUARE;
+    enum STATE CURRENT_WAVE     = SQUARE;
 
-    //while(1){
-        //switch(PRESENT_STATE){
+    while(1){
+        switch(PRESENT_STATE){
 
-        //case INIT:
+        case INIT:
             /***** LCD INITIALIZATION *****/
-            //__delay_cycles(DELAY50MS);// Wait for LCD to power up to at least 4.5 V
-            //lcd = constructor_LCD(BYTE, P6);
-            //begin_LCD(lcd, LCD_COLUMNS, LCD_ROWS, LCD_5x8DOTS);
-            //NEXT_STATE = RUN;
-            //break;
+            __delay_cycles(DELAY50MS); // Wait for LCD to power up to at least 4.5 V
+            lcd = constructor_LCD(BYTE, P6);
+            begin_LCD(lcd, LCD_COLUMNS, LCD_ROWS, LCD_5x8DOTS);
+            display_menu_LCD(lcd);
+            init_spi(); // initializes eUSCI_B0 SPI for DAC
+            setup_keypad();
+            NEXT_STATE = SQUARE;
+            break;
 
-        //case RUN:
-            //NEXT_STATE = RUN;
-            //break;
+        case IDLE:
+            __sleep();
+            NEXT_STATE = IDLE;
+            break;
 
-        //default:
-            //NEXT_STATE = INIT;
-            //break;
-        //}
+        case SQUARE:
+            gen_square_wave(3, 20000);
+            NEXT_STATE = IDLE;
+            break;
 
-        //PRESENT_STATE = NEXT_STATE;
-    //}
+        case SAW:
+            gen_triangle_wave(3, 20000);
+            NEXT_STATE = IDLE;
+            break;
+
+        case SINE:
+            // gen_square_wave(3, 20000);
+            NEXT_STATE = IDLE;
+            break;
+        default:
+            NEXT_STATE = IDLE;
+            break;
+        }
+
+        PRESENT_STATE = NEXT_STATE;
+    }
+}
+
+void gen_square_wave(double vp, uint32_t period) {
+    uint16_t voltage = volt_to_int(vp);
+    while(1) {
+        dac_write(voltage);
+        delay_us(period/2);
+        dac_write(0);
+        delay_us(period/2);
+    }
+}
+
+void gen_triangle_wave(double vp, uint32_t period) {
+    uint16_t voltage = volt_to_int(vp);
+    uint16_t step = voltage/GRAN;
+    uint16_t output = 0;
+    while(1) {
+        while(output < voltage) {
+            dac_write(output);
+            output += step;
+            delay_us((period/2)/GRAN);
+        }
+        while(output > 0) {
+            dac_write(output);
+            output -= step;
+            delay_us((period/2)/GRAN);
+        }
+    }
+
 }
