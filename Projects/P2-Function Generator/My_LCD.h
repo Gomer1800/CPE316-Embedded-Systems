@@ -9,10 +9,12 @@
 #define MY_LCD_H_
 
 #include "msp.h"
-//#include "STDINT.H"         // definition of uint32_t
 #include <stdlib.h>         // definition of size_t
-
+#include "My_Delays.h"
 #include "My_Pins.h"
+
+#define LCD_COLUMNS     ((uint8_t)0x10) // 16   columns
+#define LCD_ROWS        ((uint8_t)0x02) // 2    rows
 
 // flags for constructor_digital I/0
 #define NIBBLE      ((uint8_t)0xFF)

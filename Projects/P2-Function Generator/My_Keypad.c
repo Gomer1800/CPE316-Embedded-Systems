@@ -5,7 +5,7 @@
  *      Author: Hayden Rinn
  */
 
-#include "keypad.h"
+#include <My_Keypad.h>
 #include "My_LCD.h"
 #include "My_Delays.h"
 #include <string.h>
@@ -15,7 +15,6 @@ uint32_t count;
 enum BOOL isLocked;
 
 void setup_keypad(void) {
-    WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD; // watchdog
 
     //set the amount of chars input to zero
     count = 0;
