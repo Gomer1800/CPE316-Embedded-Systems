@@ -53,7 +53,7 @@ void determine_key(uint8_t row) {
         delay_us(DELAY25MS);
         if (check_row(row)) { // check if the row is still high
             output = get_key(c, row);  // the correct key is at (col, row)
-            lock_input(output); // pass the output the the LCD and do lock logic
+            // call a function
         }
         c++;
 

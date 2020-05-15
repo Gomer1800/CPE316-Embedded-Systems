@@ -4,12 +4,11 @@
 #include "My_DCO.h"
 #include "My_LEDS.h"
 #include "My_Delays.h"
+#include "My_Wavegen.h"
 #include <My_DAC.h>
 /**
  * main.c
  */
-
-#define GRAN 50
 
 // FSM STATES
 enum STATE {INIT, IDLE, SQUARE, SAW, SINE};
@@ -38,9 +37,6 @@ enum STATE {INIT, IDLE, SQUARE, SAW, SINE};
 */
 void *lcd;
 enum STATE CURRENT_WAVE     = SQUARE;
-
-void gen_square_wave(double vp, uint32_t period);
-void gen_triangle_wave(double vp, uint32_t period);
 
 void main(void)
 {
@@ -78,19 +74,19 @@ void main(void)
             break;
 
         case SQUARE:
-            gen_square_wave(3, 20000);
+            gen_square_wave(50, 10000);
             display_menu_LCD(lcd, "SQUARE WAVE");
             NEXT_STATE = IDLE;
             break;
 
         case SAW:
-            gen_triangle_wave(3, 20000);
+            gen_triangle_wave(10000);
             display_menu_LCD(lcd, "TRIANGLE WAVE");
             NEXT_STATE = IDLE;
             break;
 
         case SINE:
-            // gen_square_wave(3, 20000);
+            gen_sine_wave(10000);
             display_menu_LCD(lcd, "SINE WAVE");
             NEXT_STATE = IDLE;
             break;
@@ -101,33 +97,4 @@ void main(void)
 
         PRESENT_STATE = NEXT_STATE;
     }
-}
-
-void gen_square_wave(double vp, uint32_t period) {
-    uint16_t voltage = volt_to_int(vp);
-    while(1) {
-        dac_write(voltage);
-        delay_us(period/2);
-        dac_write(0);
-        delay_us(period/2);
-    }
-}
-
-void gen_triangle_wave(double vp, uint32_t period) {
-    uint16_t voltage = volt_to_int(vp);
-    uint16_t step = voltage/GRAN;
-    uint16_t output = 0;
-    while(1) {
-        while(output < voltage) {
-            dac_write(output);
-            output += step;
-            delay_us((period/2)/GRAN);
-        }
-        while(output > 0) {
-            dac_write(output);
-            output -= step;
-            delay_us((period/2)/GRAN);
-        }
-    }
-
 }

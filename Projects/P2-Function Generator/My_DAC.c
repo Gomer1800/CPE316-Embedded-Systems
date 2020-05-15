@@ -60,7 +60,3 @@ void dac_write(uint16_t data) {
     }
     P4->OUT |= BIT1;                                // Sets CS back to high, signaling end of transmission
 }
-
-uint16_t volt_to_int(double voltage) {
-    return (uint16_t)((voltage/DAC_VREF)*(DAC_INT_MAX));
-}
