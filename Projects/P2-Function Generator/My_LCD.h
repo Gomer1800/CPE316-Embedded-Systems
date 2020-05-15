@@ -124,7 +124,7 @@ void noAutoscroll       (void *lcd);
 
 void write_char_LCD     (void *lcd, char);
 void write_string_LCD   (void *lcd, char*);
-void display_menu_LCD   (void *lcd);
+void display_menu_LCD   (void *lcd, char *prompt);
 void moveTextLeft       (int maxCount);
 void moveTextRight       (int maxCount);
 

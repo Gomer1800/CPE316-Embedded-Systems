@@ -37,6 +37,7 @@ enum STATE {INIT, IDLE, SQUARE, SAW, SINE};
     d. The keys *, 0, and # shall not affect the sin or sawtooth waveforms.
 */
 void *lcd;
+enum STATE CURRENT_WAVE     = SQUARE;
 
 void gen_square_wave(double vp, uint32_t period);
 void gen_triangle_wave(double vp, uint32_t period);
@@ -47,7 +48,6 @@ void main(void)
 
     enum STATE PRESENT_STATE    = INIT;
     enum STATE NEXT_STATE       = SQUARE;
-    enum STATE CURRENT_WAVE     = SQUARE;
 
     while(1){
         switch(PRESENT_STATE){
@@ -62,7 +62,6 @@ void main(void)
             __delay_cycles(DELAY50MS); // Wait for LCD to power up to at least 4.5 V
             lcd = constructor_LCD(BYTE, P6);
             begin_LCD(lcd, LCD_COLUMNS, LCD_ROWS, LCD_5x8DOTS);
-            display_menu_LCD(lcd);
 
             /***** DAC INITIALIZATION *****/
             init_spi(); // initializes eUSCI_B0 SPI for DAC
@@ -80,16 +79,19 @@ void main(void)
 
         case SQUARE:
             gen_square_wave(3, 20000);
+            display_menu_LCD(lcd, "SQUARE WAVE");
             NEXT_STATE = IDLE;
             break;
 
         case SAW:
             gen_triangle_wave(3, 20000);
+            display_menu_LCD(lcd, "TRIANGLE WAVE");
             NEXT_STATE = IDLE;
             break;
 
         case SINE:
             // gen_square_wave(3, 20000);
+            display_menu_LCD(lcd, "SINE WAVE");
             NEXT_STATE = IDLE;
             break;
         default:
