@@ -35,22 +35,30 @@ void init_spi(void) {
     EUSCI_B0->CTLW0 &= ~EUSCI_B_CTLW0_SWRST;        // SPI is released for normal operation
 }
 
-dac_data_t *format_dac_data(uint16_t data) {
-    dac_data_t *dac_data = 0;                         // these are the 16 bits that will be transmitted to the DAC
-    dac_data->upper = (DAC_CONFIG << 4);              // Sets the config bits for the DAC
-    dac_data->upper = ((data & DAC_DATA_UPPER) >> 6); // Sets the data bits in the first half
-    dac_data->lower = ((data & DAC_DATA_LOWER) << 2); // Sets the remaining data bits in the second half
-    dac_data->lower &= ~DAC_DC_BITS;                  // Sets the don't care bits to 0
-    return dac_data;
+uint8_t get_upper(uint16_t data) {
+    uint8_t upper = DAC_CONFIG | ((data & DAC_DATA_UPPER) >> DAC_UPPER_SHIFT);
+    return upper;
+}
+
+uint8_t get_lower(uint16_t data) {
+    uint8_t lower = (data & DAC_DATA_LOWER) << DAC_LOWER_SHIFT;
+    return lower;
 }
 
 void dac_write(uint16_t data) {
-    dac_data_t *dac_data = format_dac_data(data);
+    uint8_t transmit_count = 0;
     P4->OUT &= ~BIT1;                               // Sets CS as low, signaling a transmission to the DAC
-    EUSCI_B0->TXBUF = dac_data->upper;              // transmit the first half of the data
-    while (!(EUSCI_B0->IFG & EUSCI_B_IFG_TXIFG))    // wait for the TXBUF to be ready for more data
-        ;
-    EUSCI_B0->TXBUF = dac_data->lower;              // transmit the second half of the data
+    while (transmit_count < 2) {
+        if (EUSCI_B0->IFG & EUSCI_B_IFG_TXIFG) {    // If the TX Buffer is ready for more data
+            if (transmit_count == 0) {
+                EUSCI_B0->TXBUF = get_upper(data);  // Transmit the first 8 bits
+            } else {
+                EUSCI_B0->TXBUF = get_lower(data);  // Transmit the last 8 bits
+            }
+            transmit_count++;
+        }
+    }
+    P4->OUT |= BIT1;                                // Sets CS back to high, signaling end of transmission
 }
 
 uint16_t volt_to_int(double voltage) {

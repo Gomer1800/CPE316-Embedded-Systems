@@ -12,23 +12,17 @@
 #include "msp.h"
 
 /* macros */
-#define DAC_CONFIG 0x3
+#define DAC_CONFIG 0x30
 #define DAC_DATA_UPPER 0x3C0
 #define DAC_DATA_LOWER 0x03F
-#define DAC_DC_BITS 0x003
+#define DAC_UPPER_SHIFT 6
+#define DAC_LOWER_SHIFT 2
 #define DAC_VREF 3.3
-#define DAC_INT_MAX 0x3FF
-
-/* structs */
-typedef struct {
-    uint8_t upper;
-    uint8_t lower;
-} dac_data_t;
+#define DAC_INT_MAX 1023
 
 /* function definitions */
 void init_spi(void);
-dac_data_t *format_dac_data(uint16_t data);
 void dac_write(uint16_t data);
 uint16_t volt_to_int(double voltage);
 
-#endif /* DAC_H_ */
+#endif /* MY_DAC_H_ */
