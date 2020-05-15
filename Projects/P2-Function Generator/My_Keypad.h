@@ -11,6 +11,9 @@
 #include "msp.h"
 #include <stdio.h>
 #include "STDINT.H" // definition of uint32_t
+#include "My_LCD.h"
+#include "My_Delays.h"
+#include <string.h>
 
 #define COLBITS ((uint8_t)0x70)
 #define ROWBITS ((uint8_t)0x0F)
@@ -40,4 +43,4 @@ uint8_t check_row(uint8_t row);
 
 char get_key(uint8_t col, uint8_t row);
 
-#endif /* MY_KEYPAD_H_ */
+#endif /* KEYPAD_H_ */
