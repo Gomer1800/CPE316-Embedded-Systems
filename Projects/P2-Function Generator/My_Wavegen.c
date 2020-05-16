@@ -38,20 +38,16 @@ void gen_square_wave(uint8_t dutycycle, uint32_t period) {
     //}
 }
 
-void gen_triangle_wave(uint32_t period) {
+void gen_sawtooth_wave(uint32_t period) {
     uint16_t voltage = DAC_3V;
     uint16_t step = voltage/GRAN;
+    uint32_t step_delay = period/GRAN;
     uint16_t output = 0;
     //while(1) {
         while(output < voltage) {
             dac_write(output);
             output += step;
-            delay_us((period/2)/GRAN);
-        }
-        while(output > 0) {
-            dac_write(output);
-            output -= step;
-            delay_us((period/2)/GRAN);
+            delay_us(step_delay);
         }
     //}
 }

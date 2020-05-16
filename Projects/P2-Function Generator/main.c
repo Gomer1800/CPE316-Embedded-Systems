@@ -84,7 +84,7 @@ void main(void)
             break;
 
         case SAW:
-            gen_triangle_wave( ((Wave*)waveform)->PERIOD);
+            gen_sawtooth_wave( ((Wave*)waveform)->PERIOD);
             NEXT_STATE = ((Wave*)waveform)->CURRENT_WAVE;
             break;
 

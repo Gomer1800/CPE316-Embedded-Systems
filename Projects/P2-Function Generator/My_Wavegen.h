@@ -37,7 +37,7 @@ void* constructor_waveform(void);
 
 // FUNCTION DEFINITIONS
 void gen_square_wave(uint8_t dutycycle, uint32_t period);
-void gen_triangle_wave(uint32_t period);
+void gen_sawtooth_wave(uint32_t period);
 void gen_sine_wave(uint32_t period);
 
 char* get_wave_string(void);
