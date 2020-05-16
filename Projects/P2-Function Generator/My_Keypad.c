@@ -12,11 +12,8 @@ char savedPin[ARR_LENGTH];
 uint32_t count;
 // enum BOOL isLocked;
 
-uint8_t KEYPAD_CHAR = '?';
-
 // CALL BACK FUNCTION FOR P2
 void callback(void){
-    write_char_LCD(lcd, KEYPAD_CHAR);
     switch(KEYPAD_CHAR){
 /*
     case '1':
@@ -59,9 +56,10 @@ void callback(void){
         break;
 */
     default:
-        ((Wave*)waveform)->CURRENT_WAVE = SQUARE;
+        //((Wave*)waveform)->CURRENT_WAVE = SQUARE;
         break;
     }
+    write_char_LCD(lcd, KEYPAD_CHAR);
 }
 
 void setup_keypad(void) {
@@ -106,10 +104,11 @@ void determine_key(uint8_t row) {
         delay_us(DELAY25MS); // button debounce
         if (check_row(row)) { // check if the row is still high
             KEYPAD_CHAR = get_key(c, row);  // the correct key is at (col, row)
-            // call a function
-            ((Wave*)waveform)->CURRENT_WAVE = CALLBACK;
+
+            // Business Logic
             write_char_LCD(lcd, KEYPAD_CHAR);
             set_cursor_LCD(lcd, 0, 1);
+            ((Wave*)waveform)->CURRENT_WAVE = CALLBACK;
         }
         c++;
 

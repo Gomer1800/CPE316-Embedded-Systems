@@ -15,6 +15,8 @@
 #include "My_Delays.h"
 #include <string.h>
 
+extern uint8_t KEYPAD_CHAR;
+
 #define COLBITS ((uint8_t)0x70)
 #define ROWBITS ((uint8_t)0x0F)
 

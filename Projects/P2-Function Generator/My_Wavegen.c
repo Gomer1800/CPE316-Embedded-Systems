@@ -22,7 +22,7 @@ void* constructor_waveform(void){
     wave = malloc(sizeof(Wave));
     wave->CURRENT_WAVE = SQUARE;
     wave->DUTY_CYCLE   = 50;
-    wave->PERIOD       = 10000;
+    wave->PERIOD       = 20000;
     return wave;
 }
 

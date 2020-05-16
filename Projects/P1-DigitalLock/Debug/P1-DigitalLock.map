@@ -1,7 +1,7 @@
 ******************************************************************************
                   TI ARM Linker PC v20.2.0                     
 ******************************************************************************
->> Linked Fri May 15 10:58:59 2020
+>> Linked Fri May 15 20:59:28 2020
 
 OUTPUT FILE NAME:   <P1-DigitalLock.out>
 ENTRY POINT SYMBOL: "_c_int00_noargs"  address: 000018a5

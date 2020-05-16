@@ -37,6 +37,8 @@ void *waveform;
 void *lcd;
 enum STATE PRESENT_STATE;
 enum STATE NEXT_STATE;
+uint8_t KEYPAD_CHAR;
+
 //uint8_t KEYPAD_CHAR = '?';
 
 void main(void)
@@ -65,9 +67,9 @@ void main(void)
             init_spi(); // initializes eUSCI_B0 SPI for DAC
 
             //***** KEYPAD INITIALIZATION ****
-            setup_keypad();
             display_menu_LCD(lcd, get_wave_string());
             NEXT_STATE = SQUARE;
+            setup_keypad();
             break;
 
         case CALLBACK:
@@ -78,19 +80,22 @@ void main(void)
 
         case SQUARE:
             gen_square_wave( ((Wave*)waveform)->DUTY_CYCLE, ((Wave*)waveform)->PERIOD);
+            NEXT_STATE = ((Wave*)waveform)->CURRENT_WAVE;
             break;
 
         case SAW:
             gen_triangle_wave( ((Wave*)waveform)->PERIOD);
+            NEXT_STATE = ((Wave*)waveform)->CURRENT_WAVE;
             break;
 
         case SINE:
             gen_sine_wave( ((Wave*)waveform)->PERIOD);
+            NEXT_STATE = ((Wave*)waveform)->CURRENT_WAVE;
             break;
 
         default:
             //NEXT_STATE = ((Wave*)waveform)->CURRENT_WAVE;
-            NEXT_STATE = SQUARE;
+            //NEXT_STATE = SQUARE;
             break;
         }
 

@@ -1,7 +1,7 @@
 ******************************************************************************
                   TI ARM Linker PC v20.2.0                     
 ******************************************************************************
->> Linked Wed May 13 19:12:05 2020
+>> Linked Fri May 15 20:59:07 2020
 
 OUTPUT FILE NAME:   <A5 - Interrupts and Timers.out>
 ENTRY POINT SYMBOL: "_c_int00_noargs"  address: 00000719
