@@ -82,3 +82,19 @@ void gen_sine_wave(uint32_t period) {
         }
     }
 }
+
+char* get_wave_string(void) {
+    switch(((Wave*)waveform)->CURRENT_WAVE){
+        case SQUARE:
+            return STRING_SQUARE;
+
+        case SINE:
+            return STRING_SINE;
+
+        case SAW:
+            return STRING_SAW;
+
+        default:
+            return "?????";
+    }
+}

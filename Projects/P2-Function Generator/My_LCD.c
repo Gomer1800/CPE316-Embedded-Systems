@@ -282,10 +282,9 @@ void write_string_LCD(void *lcd, char *my_string)
 void display_menu_LCD(void *lcd, char *prompt){
     clear_LCD(lcd);
     delay_us(DELAY2MS); // initial delay to display
-    write_string_LCD(lcd, LOCKED);
-    set_cursor_LCD(lcd, 0, 1);
     write_string_LCD(lcd, prompt);
     delay_us(DELAY2MS);
+    set_cursor_LCD(lcd, 0, 1);
 }
 
 void moveTextLeft(int maxCount){

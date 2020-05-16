@@ -15,8 +15,13 @@
 #define DAC_3V 930
 #define GRAN 50
 
+//Define macros for menu
+#define STRING_SQUARE     ((char *)("SQUARE"))
+#define STRING_SINE       ((char *)("SINE"))
+#define STRING_SAW        ((char *)("SAW TOOTH"))
+
 // FSM STATES
-enum STATE {INIT, SQUARE, SAW, SINE};
+enum STATE {INIT, CALLBACK, SQUARE, SAW, SINE};
 
 //Global pointer for the waveform struct
 extern void *waveform;
@@ -34,5 +39,7 @@ void* constructor_waveform(void);
 void gen_square_wave(uint8_t dutycycle, uint32_t period);
 void gen_triangle_wave(uint32_t period);
 void gen_sine_wave(uint32_t period);
+
+char* get_wave_string(void);
 
 #endif /* MY_WAVEGEN_H_ */

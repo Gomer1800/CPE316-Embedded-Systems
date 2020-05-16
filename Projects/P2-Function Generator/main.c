@@ -35,12 +35,15 @@
 
 void *waveform;
 void *lcd;
-enum STATE PRESENT_STATE = INIT;
-enum STATE NEXT_STATE    = SQUARE;
+enum STATE PRESENT_STATE;
+enum STATE NEXT_STATE;
+//uint8_t KEYPAD_CHAR = '?';
 
 void main(void)
 {
 	WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;		// stop watchdog timer
+
+	PRESENT_STATE = INIT;
 
     while(1){
         switch(PRESENT_STATE){
@@ -63,30 +66,31 @@ void main(void)
 
             //***** KEYPAD INITIALIZATION ****
             setup_keypad();
+            display_menu_LCD(lcd, get_wave_string());
+            NEXT_STATE = SQUARE;
+            break;
 
+        case CALLBACK:
+            callback();
+            display_menu_LCD(lcd, get_wave_string());
             NEXT_STATE = ((Wave*)waveform)->CURRENT_WAVE;
             break;
 
         case SQUARE:
             gen_square_wave( ((Wave*)waveform)->DUTY_CYCLE, ((Wave*)waveform)->PERIOD);
-            display_menu_LCD(lcd, "SQUARE WAVE");
-            NEXT_STATE = ((Wave*)waveform)->CURRENT_WAVE;
             break;
 
         case SAW:
             gen_triangle_wave( ((Wave*)waveform)->PERIOD);
-            display_menu_LCD(lcd, "TRIANGLE WAVE");
-            NEXT_STATE = ((Wave*)waveform)->CURRENT_WAVE;
             break;
 
         case SINE:
             gen_sine_wave( ((Wave*)waveform)->PERIOD);
-            display_menu_LCD(lcd, "SINE WAVE");
-            NEXT_STATE = ((Wave*)waveform)->CURRENT_WAVE;
             break;
 
         default:
-            NEXT_STATE = ((Wave*)waveform)->CURRENT_WAVE;
+            //NEXT_STATE = ((Wave*)waveform)->CURRENT_WAVE;
+            NEXT_STATE = SQUARE;
             break;
         }
 
