@@ -68,7 +68,7 @@ void main(void)
 
             //***** KEYPAD INITIALIZATION ****
             display_menu_LCD(lcd, get_wave_string());
-            NEXT_STATE = SQUARE;
+            NEXT_STATE = SAW;
             setup_keypad();
             break;
 

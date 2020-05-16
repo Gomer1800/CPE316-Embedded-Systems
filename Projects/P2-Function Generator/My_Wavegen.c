@@ -20,7 +20,7 @@ static uint16_t sine_lookup_q1[32] = {
 void* constructor_waveform(void){
     Wave* wave;
     wave = malloc(sizeof(Wave));
-    wave->CURRENT_WAVE = SQUARE;
+    wave->CURRENT_WAVE = SAW;
     wave->DUTY_CYCLE   = 50;
     wave->PERIOD       = 20000;
     return wave;
@@ -30,19 +30,19 @@ void gen_square_wave(uint8_t dutycycle, uint32_t period) {
     uint16_t voltage = DAC_3V;
     uint32_t on_period = (dutycycle/100) * period;
     uint32_t off_period = period - on_period;
-    while(1) {
-        dac_write(voltage);
-        delay_us(on_period);
-        dac_write(0);
-        delay_us(off_period);
-    }
+    //while(1) {
+    dac_write(voltage);
+    delay_us(on_period);
+    dac_write(0);
+    delay_us(off_period);
+    //}
 }
 
 void gen_triangle_wave(uint32_t period) {
     uint16_t voltage = DAC_3V;
     uint16_t step = voltage/GRAN;
     uint16_t output = 0;
-    while(1) {
+    //while(1) {
         while(output < voltage) {
             dac_write(output);
             output += step;
@@ -53,13 +53,13 @@ void gen_triangle_wave(uint32_t period) {
             output -= step;
             delay_us((period/2)/GRAN);
         }
-    }
+    //}
 }
 
 void gen_sine_wave(uint32_t period) {
     uint8_t i;
     uint32_t step_delay = (period/4)/32;
-    while(1) {
+    //while(1) {
         // 0 to pi/2
         for (i = 0; i < 32; i++) {
             dac_write(sine_lookup_q1[i]);
@@ -80,7 +80,7 @@ void gen_sine_wave(uint32_t period) {
             dac_write(DAC_3V - sine_lookup_q1[i]);
             delay_us(step_delay);
         }
-    }
+    //}
 }
 
 char* get_wave_string(void) {
