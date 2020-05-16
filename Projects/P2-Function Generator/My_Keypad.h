@@ -35,6 +35,8 @@ extern uint32_t count;
 
 enum BOOL{false, true};
 
+void callback(void);
+
 void setup_keypad(void);
 
 void determine_key(uint8_t row);

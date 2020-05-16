@@ -9,6 +9,23 @@
  *      Author: Hayden
  */
 
+// SINE LOOKUP TABLE
+static uint16_t sine_lookup_q1[32] = {
+465, 489, 512, 535, 559, 582, 604, 626,
+648, 670, 691, 711, 731, 750, 768, 785,
+802, 818, 833, 847, 860, 872, 882, 892,
+901, 909, 915, 920, 925, 928, 929, 930
+};
+
+void* constructor_waveform(void){
+    Wave* wave;
+    wave = malloc(sizeof(Wave));
+    wave->CURRENT_WAVE = SQUARE;
+    wave->DUTY_CYCLE   = 50;
+    wave->PERIOD       = 10000;
+    return wave;
+}
+
 void gen_square_wave(uint8_t dutycycle, uint32_t period) {
     uint16_t voltage = DAC_3V;
     uint32_t on_period = (dutycycle/100) * period;
@@ -37,7 +54,6 @@ void gen_triangle_wave(uint32_t period) {
             delay_us((period/2)/GRAN);
         }
     }
-
 }
 
 void gen_sine_wave(uint32_t period) {

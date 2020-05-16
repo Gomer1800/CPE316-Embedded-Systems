@@ -7,9 +7,16 @@
 
 #include <My_Keypad.h>
 
+// CALL BACK FUNCTION FOR P2
+void callback(void){
+    int i = 1;
+}
+
 char savedPin[ARR_LENGTH];
 uint32_t count;
-enum BOOL isLocked;
+// enum BOOL isLocked;
+
+uint8_t KEYPAD_CHAR = '?';
 
 void setup_keypad(void) {
     WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD; // watchdog
@@ -44,7 +51,7 @@ void setup_keypad(void) {
 }
 
 void determine_key(uint8_t row) {
-    uint8_t output = '?';
+    KEYPAD_CHAR = '?';
     uint8_t col;
     uint8_t c = 1;
     for (col = BIT4; col < BIT7; col = col << 1) {
@@ -52,8 +59,9 @@ void determine_key(uint8_t row) {
         P4->OUT |= col; // turn on one column
         delay_us(DELAY25MS);
         if (check_row(row)) { // check if the row is still high
-            output = get_key(c, row);  // the correct key is at (col, row)
+            KEYPAD_CHAR = get_key(c, row);  // the correct key is at (col, row)
             // call a function
+            callback();
         }
         c++;
 

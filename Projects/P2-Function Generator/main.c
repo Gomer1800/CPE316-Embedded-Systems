@@ -10,9 +10,6 @@
  * main.c
  */
 
-// FSM STATES
-enum STATE {INIT, IDLE, SQUARE, SAW, SINE};
-
 /*
 3.The function generator shall be capable of producing
     a. A square wave with variable duty cycle
@@ -35,15 +32,15 @@ enum STATE {INIT, IDLE, SQUARE, SAW, SINE};
     c. The 0 key shall reset the duty cycle to 50%
     d. The keys *, 0, and # shall not affect the sin or sawtooth waveforms.
 */
+
+void *waveform;
 void *lcd;
-enum STATE CURRENT_WAVE     = SQUARE;
+enum STATE PRESENT_STATE = INIT;
+enum STATE NEXT_STATE    = SQUARE;
 
 void main(void)
 {
 	WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;		// stop watchdog timer
-
-    enum STATE PRESENT_STATE    = INIT;
-    enum STATE NEXT_STATE       = SQUARE;
 
     while(1){
         switch(PRESENT_STATE){
@@ -52,7 +49,9 @@ void main(void)
 
             //***** DCO INITIALIZATION *****
             setup_DCO(FREQ_3MHZ);
-            setup_MCLK_to_DCO();
+
+            //***** WAVEFORM INITIALIZATION *****
+            waveform =  constructor_waveform();
 
             //***** LCD INITIALIZATION *****
             __delay_cycles(DELAY50MS); // Wait for LCD to power up to at least 4.5 V
@@ -62,36 +61,32 @@ void main(void)
             //***** DAC INITIALIZATION *****
             init_spi(); // initializes eUSCI_B0 SPI for DAC
 
-            /***** KEYPAD INITIALIZATION *****/
+            //***** KEYPAD INITIALIZATION ****
             setup_keypad();
 
-            NEXT_STATE = SQUARE;
-            break;
-
-        case IDLE:
-            __sleep();
-            NEXT_STATE = IDLE;
+            NEXT_STATE = ((Wave*)waveform)->CURRENT_WAVE;
             break;
 
         case SQUARE:
-            gen_square_wave(50, 10000);
+            gen_square_wave( ((Wave*)waveform)->DUTY_CYCLE, ((Wave*)waveform)->PERIOD);
             display_menu_LCD(lcd, "SQUARE WAVE");
-            NEXT_STATE = IDLE;
+            NEXT_STATE = ((Wave*)waveform)->CURRENT_WAVE;
             break;
 
         case SAW:
-            gen_triangle_wave(10000);
+            gen_triangle_wave( ((Wave*)waveform)->PERIOD);
             display_menu_LCD(lcd, "TRIANGLE WAVE");
-            NEXT_STATE = IDLE;
+            NEXT_STATE = ((Wave*)waveform)->CURRENT_WAVE;
             break;
 
         case SINE:
-            gen_sine_wave(10000);
+            gen_sine_wave( ((Wave*)waveform)->PERIOD);
             display_menu_LCD(lcd, "SINE WAVE");
-            NEXT_STATE = IDLE;
+            NEXT_STATE = ((Wave*)waveform)->CURRENT_WAVE;
             break;
+
         default:
-            NEXT_STATE = IDLE;
+            NEXT_STATE = ((Wave*)waveform)->CURRENT_WAVE;
             break;
         }
 
