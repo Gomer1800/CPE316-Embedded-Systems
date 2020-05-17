@@ -7,66 +7,10 @@
 
 #include <My_Keypad.h>
 #include "My_Wavegen.h"
-
-char savedPin[ARR_LENGTH];
-uint32_t count;
-// enum BOOL isLocked;
-
-// CALL BACK FUNCTION FOR P2
-void callback(void){
-    switch(KEYPAD_CHAR){
-/*
-    case '1':
-        break;
-
-    case '2':
-        break;
-
-    case '3':
-        break;
-
-    case '4':
-        break;
-
-    case '5':
-        break;
-
-    case '6':
-        break;
-*/
-    case '7':
-        ((Wave*)waveform)->CURRENT_WAVE = SQUARE;
-        break;
-
-    case '8':
-        ((Wave*)waveform)->CURRENT_WAVE = SINE;
-        break;
-
-    case '9':
-        ((Wave*)waveform)->CURRENT_WAVE = SAW;
-        break;
-/*
-    case '*':
-        break;
-
-    case '#':
-        break;
-
-    case '0':
-        break;
-*/
-    default:
-        //((Wave*)waveform)->CURRENT_WAVE = SQUARE;
-        break;
-    }
-    write_char_LCD(lcd, KEYPAD_CHAR);
-}
+#include "My_Oscilloscope.h"
 
 void setup_keypad(void) {
     WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD; // watchdog
-
-    //set the amount of chars input to zero
-    count = 0;
 
     // set columns as GPIO (P4.4, P4.5, P4.6)
     P4->SEL1 &= ~COLBITS;
@@ -95,7 +39,7 @@ void setup_keypad(void) {
 }
 
 void determine_key(uint8_t row) {
-    KEYPAD_CHAR = '?';
+    char keypad_input;
     uint8_t col;
     uint8_t c = 1;
     for (col = BIT4; col < BIT7; col = col << 1) {
@@ -103,12 +47,13 @@ void determine_key(uint8_t row) {
         P4->OUT |= col; // turn on one column
         delay_us(DELAY25MS); // button debounce
         if (check_row(row)) { // check if the row is still high
-            KEYPAD_CHAR = get_key(c, row);  // the correct key is at (col, row)
+            keypad_input = get_key(c, row);  // the correct key is at (col, row)
 
             // Business Logic
-            write_char_LCD(lcd, KEYPAD_CHAR);
+            change_wave(keypad_input);
+            write_char_LCD(lcd, keypad_input);
             set_cursor_LCD(lcd, 0, 1);
-            ((Wave*)waveform)->CURRENT_WAVE = CALLBACK;
+            break;
         }
         c++;
 

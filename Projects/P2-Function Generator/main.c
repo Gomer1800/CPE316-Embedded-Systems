@@ -6,6 +6,7 @@
 #include "My_Delays.h"
 #include "My_Wavegen.h"
 #include <My_DAC.h>
+#include "My_Oscilloscope.h"
 /**
  * main.c
  */
@@ -33,13 +34,12 @@
     d. The keys *, 0, and # shall not affect the sin or sawtooth waveforms.
 */
 
-void *waveform;
 void *lcd;
 enum STATE PRESENT_STATE;
 enum STATE NEXT_STATE;
-uint8_t KEYPAD_CHAR;
-
-//uint8_t KEYPAD_CHAR = '?';
+enum STATE CURRENT_WAVE;
+uint32_t wave_period;
+double wave_dutycycle;
 
 void main(void)
 {
@@ -56,7 +56,7 @@ void main(void)
             setup_DCO(FREQ_3MHZ);
 
             //***** WAVEFORM INITIALIZATION *****
-            waveform =  constructor_waveform();
+            //waveform =  constructor_waveform();
 
             //***** LCD INITIALIZATION *****
             __delay_cycles(DELAY50MS); // Wait for LCD to power up to at least 4.5 V
@@ -67,30 +67,30 @@ void main(void)
             init_spi(); // initializes eUSCI_B0 SPI for DAC
 
             //***** KEYPAD INITIALIZATION ****
-            display_menu_LCD(lcd, get_wave_string());
-            NEXT_STATE = SAW;
+            display_menu_LCD(lcd, "");
+
+            wave_period = P_100HZ;
+            wave_dutycycle = 0.5;
+            NEXT_STATE = SQUARE;
             setup_keypad();
             break;
 
-        case CALLBACK:
-            callback();
-            display_menu_LCD(lcd, get_wave_string());
-            NEXT_STATE = ((Wave*)waveform)->CURRENT_WAVE;
-            break;
-
         case SQUARE:
-            gen_square_wave( ((Wave*)waveform)->DUTY_CYCLE, ((Wave*)waveform)->PERIOD);
-            NEXT_STATE = ((Wave*)waveform)->CURRENT_WAVE;
+            CURRENT_WAVE = SQUARE;
+            gen_square_wave(wave_dutycycle, wave_period);
+            NEXT_STATE = CURRENT_WAVE;
             break;
 
         case SAW:
-            gen_sawtooth_wave( ((Wave*)waveform)->PERIOD);
-            NEXT_STATE = ((Wave*)waveform)->CURRENT_WAVE;
+            CURRENT_WAVE = SAW;
+            gen_sawtooth_wave(wave_period);
+            NEXT_STATE = CURRENT_WAVE;
             break;
 
         case SINE:
-            gen_sine_wave( ((Wave*)waveform)->PERIOD);
-            NEXT_STATE = ((Wave*)waveform)->CURRENT_WAVE;
+            CURRENT_WAVE = SINE;
+            gen_sine_wave(wave_period);
+            NEXT_STATE = CURRENT_WAVE;
             break;
 
         default:
@@ -101,4 +101,65 @@ void main(void)
 
         PRESENT_STATE = NEXT_STATE;
     }
+}
+
+void change_wave(char keypad_char){
+    switch(keypad_char){
+
+    case '1':
+        wave_period = P_100HZ;
+        break;
+
+    case '2':
+        wave_period = P_200HZ;
+        break;
+
+    case '3':
+        wave_period = P_300HZ;
+        break;
+
+    case '4':
+        wave_period = P_400HZ;
+        break;
+
+    case '5':
+        wave_period = P_500HZ;
+        break;
+
+    case '6':
+        break;
+
+    case '7':
+        CURRENT_WAVE = SQUARE;
+        break;
+
+    case '8':
+        CURRENT_WAVE = SINE;
+        break;
+
+    case '9':
+        CURRENT_WAVE = SAW;
+        break;
+
+    case '*':
+        if (wave_dutycycle >= 0.2) {
+            wave_dutycycle -= 0.1;
+        }
+        break;
+
+    case '#':
+        if (wave_dutycycle <= 0.8) {
+            wave_dutycycle += 0.1;
+        }
+        break;
+
+    case '0':
+        wave_dutycycle = 0.5;
+        break;
+
+    default:
+        //((Wave*)waveform)->CURRENT_WAVE = SQUARE;
+        break;
+    }
+    write_char_LCD(lcd, keypad_char);
 }
