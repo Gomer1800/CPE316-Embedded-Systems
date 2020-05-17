@@ -17,33 +17,24 @@ static uint16_t sine_lookup_q1[32] = {
 901, 909, 915, 920, 925, 928, 929, 930
 };
 
-void* constructor_waveform(void){
+/*void* constructor_waveform(void){
     Wave* wave;
     wave = malloc(sizeof(Wave));
     wave->CURRENT_WAVE = SAW;
     wave->DUTY_CYCLE   = 50;
     wave->PERIOD       = 20000;
     return wave;
-}
+}*/
 
-/*
-void gen_square_wave(uint8_t dutycycle, uint32_t period) {
+
+void gen_square_wave(double dutycycle, uint32_t period) {
     uint16_t voltage = DAC_3V;
-    uint32_t on_period = (dutycycle/100) * period;
+    uint32_t on_period = period * dutycycle;
     uint32_t off_period = period - on_period;
-    //while(1) {
     dac_write(voltage);
     delay_us(on_period);
     dac_write(0);
     delay_us(off_period);
-    //}
-}
-*/
-
-void gen_square_wave(uint32_t dutycycle, uint32_t period){
-    TIMER_A0->CCR[0] = period; //period
-    TIMER_A0->CCR[1] = (uint32_t)((period*dutycycle)/100);
-    global_square_period = period;
 }
 
 void gen_sawtooth_wave(uint32_t period) {
@@ -51,19 +42,16 @@ void gen_sawtooth_wave(uint32_t period) {
     uint16_t step = voltage/GRAN;
     uint32_t step_delay = period/GRAN;
     uint16_t output = 0;
-    //while(1) {
-        while(output < voltage) {
-            dac_write(output);
-            output += step;
-            delay_us(step_delay);
-        }
-    //}
+    while(output < voltage) {
+        dac_write(output);
+        output += step;
+        delay_us(step_delay);
+    }
 }
 
 void gen_sine_wave(uint32_t period) {
     uint8_t i;
     uint32_t step_delay = (period/4)/32;
-    //while(1) {
         // 0 to pi/2
         for (i = 0; i < 32; i++) {
             dac_write(sine_lookup_q1[i]);
@@ -84,10 +72,9 @@ void gen_sine_wave(uint32_t period) {
             dac_write(DAC_3V - sine_lookup_q1[i]);
             delay_us(step_delay);
         }
-    //}
 }
 
-char* get_wave_string(void) {
+/*char* get_wave_string(void) {
     switch(((Wave*)waveform)->CURRENT_WAVE){
         case SQUARE:
             return STRING_SQUARE;
@@ -101,4 +88,4 @@ char* get_wave_string(void) {
         default:
             return "?????";
     }
-}
+}*/
