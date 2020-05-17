@@ -11,6 +11,16 @@
 #include "msp.h"
 #include <stdlib.h>         // definition of malloc
 
+//Calculated CCR0 values at DCO = 3MHz
+#define SQUARE_100_HZ   30000
+#define SQUARE_200_HZ   (uint32_t)(SQUARE_100_HZ/2)
+#define SQUARE_300_HZ   (uint32_t)(SQUARE_100_HZ/3)
+#define SQUARE_400_HZ   (uint32_t)(SQUARE_100_HZ/4)
+#define SQUARE_500_HZ   (uint32_t)(SQUARE_100_HZ/5)
+
+extern uint32_t global_square_period;
+
+
 // MACROS
 #define DAC_3V 930
 #define GRAN 50
@@ -36,7 +46,8 @@ typedef struct {
 void* constructor_waveform(void);
 
 // FUNCTION DEFINITIONS
-void gen_square_wave(uint8_t dutycycle, uint32_t period);
+//void gen_square_wave(uint8_t dutycycle, uint32_t period);
+void gen_square_wave(uint32_t dutycycle, uint32_t period);
 void gen_sawtooth_wave(uint32_t period);
 void gen_sine_wave(uint32_t period);
 

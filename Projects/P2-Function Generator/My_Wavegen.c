@@ -26,6 +26,7 @@ void* constructor_waveform(void){
     return wave;
 }
 
+/*
 void gen_square_wave(uint8_t dutycycle, uint32_t period) {
     uint16_t voltage = DAC_3V;
     uint32_t on_period = (dutycycle/100) * period;
@@ -36,6 +37,13 @@ void gen_square_wave(uint8_t dutycycle, uint32_t period) {
     dac_write(0);
     delay_us(off_period);
     //}
+}
+*/
+
+void gen_square_wave(uint32_t dutycycle, uint32_t period){
+    TIMER_A0->CCR[0] = period; //period
+    TIMER_A0->CCR[1] = (uint32_t)((period*dutycycle)/100);
+    global_square_period = period;
 }
 
 void gen_sawtooth_wave(uint32_t period) {

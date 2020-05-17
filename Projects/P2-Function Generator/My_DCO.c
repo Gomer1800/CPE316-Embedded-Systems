@@ -45,6 +45,16 @@ void setup_MCLK_to_DCO(void) {
     CS->KEY = 0;            // locks CS
 }
 
+void setup_SMCLK_to_DCO(void){
+    CS->KEY = CS_KEY_VAL;   // unlocks CS
+    /*select DCO Clock source for SMCLK
+     *this additional masking is done to get accurate frequencies
+     *might affect the DAC
+     */
+    CS->CTL1 = CS->CTL1 & ~(CS_CTL1_SELS_MASK | CS_CTL1_DIVS_MASK) | CS_CTL1_SELS_3;
+    CS->KEY = 0;    // locks CS
+}
+
 uint32_t get_DCO_Frequency() {
 
     uint32_t DCO_FREQUENCY = CS->CTL0;

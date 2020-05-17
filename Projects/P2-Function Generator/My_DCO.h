@@ -9,7 +9,7 @@
 #define MY_DCO_H_
 
 #include "msp.h"
-#include "STDINT.H" // definition of uint32_t
+//#include "STDINT.H" // definition of uint32_t
 
 // Macros for human readable access to clock control settings
 #define FREQ_1_5MHZ CS_CTL0_DCORSEL_0
@@ -23,6 +23,7 @@
 void setup_DCO(uint32_t);
 
 void setup_MCLK_to_DCO(void);
+void setup_SMCLK_to_DCO(void);
 
 uint32_t get_DCO_Frequency();
 
