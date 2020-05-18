@@ -75,24 +75,30 @@ void main(void)
             setup_keypad();
             break;
 
+        case LCD:
+            // Ill call the lcd print here
+            //display_menu_LCD(lcd, STRING_SQUARE);
+            NEXT_STATE = CURRENT_WAVE;
+            break;
+
         case SQUARE:
             CURRENT_WAVE = SQUARE;
             gen_square_wave(wave_dutycycle, wave_period);
-            display_menu_LCD(lcd, STRING_SQUARE);
+            //display_menu_LCD(lcd, STRING_SQUARE);
             NEXT_STATE = CURRENT_WAVE;
             break;
 
         case SAW:
             CURRENT_WAVE = SAW;
             gen_sawtooth_wave(wave_period);
-            display_menu_LCD(lcd, STRING_SAW);
+            //display_menu_LCD(lcd, STRING_SAW);
             NEXT_STATE = CURRENT_WAVE;
             break;
 
         case SINE:
             CURRENT_WAVE = SINE;
             gen_sine_wave(wave_period);
-            display_menu_LCD(lcd, STRING_SINE);
+            //display_menu_LCD(lcd, STRING_SINE);
             NEXT_STATE = CURRENT_WAVE;
             break;
 

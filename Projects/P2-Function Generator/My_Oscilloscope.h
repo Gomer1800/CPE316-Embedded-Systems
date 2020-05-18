@@ -9,7 +9,7 @@
 #define MY_OSCILLOSCOPE_H_
 
 // FSM STATES
-enum STATE {INIT, SQUARE, SAW, SINE};
+enum STATE {INIT, LCD, SQUARE, SAW, SINE};
 
 // FUNCTION DEFINITIONS
 void change_wave(char keypad_char);
