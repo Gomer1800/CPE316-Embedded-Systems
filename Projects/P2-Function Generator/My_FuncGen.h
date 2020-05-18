@@ -15,6 +15,7 @@ enum STATE {INIT, DISPLAY_MENU, SQUARE, SAW, SINE};
 
 // FUNCTION DEFINITIONS
 void change_wave(char keypad_char);
+char*get_wave_string(STATE);
 
 // STRUCTS
 typedef struct wave_struct {

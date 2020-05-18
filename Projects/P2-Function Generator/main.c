@@ -55,9 +55,6 @@ void main(void)
             //***** DCO INITIALIZATION *****
             setup_DCO(FREQ_3MHZ);
 
-            //***** WAVEFORM INITIALIZATION *****
-            //waveform =  constructor_waveform();
-
             //***** LCD INITIALIZATION *****
             __delay_cycles(DELAY50MS); // Wait for LCD to power up to at least 4.5 V
             lcd = constructor_LCD(BYTE, P6);
@@ -69,6 +66,7 @@ void main(void)
             //***** KEYPAD INITIALIZATION ****
             display_menu_LCD(lcd, "");
 
+            //***** WAVE INITIALIZATION *****
             wave_period = P_100HZ;
             wave_dutycycle = 0.5;
             CURRENT_WAVE = SQUARE;
@@ -77,8 +75,7 @@ void main(void)
             break;
 
         case DISPLAY_MENU:
-            // Ill call the lcd print here
-            //display_menu_LCD(lcd, STRING_SQUARE);
+            display_menu_LCD(lcd, get_wave_string(CURRENT_WAVE));
             NEXT_STATE = CURRENT_WAVE;
             break;
 
@@ -183,4 +180,21 @@ void change_wave(char keypad_char){
         break;
     }
     write_char_LCD(lcd, keypad_char);
+}
+
+char* get_wave_string(STATE){
+    switch(STATE){
+    case SQUARE:
+        return STRING_SQUARE;
+
+    case SINE:
+        return STRING_SINE;
+
+    case SAW:
+        return STRING_SAW;
+
+    default:
+        return "STATE ERROR";
+
+    }
 }

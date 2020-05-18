@@ -51,6 +51,7 @@ void determine_key(uint8_t row) {
 
             // Business Logic
             change_wave(keypad_input);
+            set_cursor_LCD(lcd, 0, 1);
             write_char_LCD(lcd, keypad_input);
             set_cursor_LCD(lcd, 0, 1);
             break;
