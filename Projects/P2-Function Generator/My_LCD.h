@@ -9,10 +9,12 @@
 #define MY_LCD_H_
 
 #include "msp.h"
-//#include "STDINT.H"         // definition of uint32_t
 #include <stdlib.h>         // definition of size_t
-
+#include "My_Delays.h"
 #include "My_Pins.h"
+
+#define LCD_COLUMNS     ((uint8_t)0x10) // 16   columns
+#define LCD_ROWS        ((uint8_t)0x02) // 2    rows
 
 // flags for constructor_digital I/0
 #define NIBBLE      ((uint8_t)0xFF)
@@ -119,10 +121,10 @@ void rightToLeft        (void *lcd);
 void autoscroll         (void *lcd);
 void noAutoscroll       (void *lcd);
 
-
 void write_char_LCD     (void *lcd, char);
 void write_string_LCD   (void *lcd, char*);
-void display_menu_LCD   (void *lcd);
+void display_menu_LCD   (void *lcd, char *prompt, char *prompt2);
+
 void moveTextLeft       (int maxCount);
 void moveTextRight       (int maxCount);
 

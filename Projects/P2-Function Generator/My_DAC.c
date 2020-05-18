@@ -14,7 +14,7 @@ void init_spi(void) {
 
     P1->SEL0 |= BIT5 | BIT6; // Set P1.5 and P1.6 as SPI pins
 
-    // Setup P4.1 (CS) as GPIO output
+    // Setup P5.1 (CS) as GPIO output
     P5->SEL0 &= ~BIT1;
     P5->SEL1 &= ~BIT1;
     P5->DIR |= BIT1;
@@ -59,8 +59,4 @@ void dac_write(uint16_t data) {
         }
     }
     P5->OUT |= BIT1;                                // Sets CS back to high, signaling end of transmission
-}
-
-uint16_t volt_to_int(double voltage) {
-    return (uint16_t)((voltage/DAC_VREF)*(DAC_INT_MAX));
 }

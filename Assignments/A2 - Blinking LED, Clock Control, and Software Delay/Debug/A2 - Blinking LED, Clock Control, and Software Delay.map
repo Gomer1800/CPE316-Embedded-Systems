@@ -1,7 +1,7 @@
 ******************************************************************************
                   TI ARM Linker PC v20.2.0                     
 ******************************************************************************
->> Linked Tue Apr 21 14:40:59 2020
+>> Linked Fri May 15 20:58:58 2020
 
 OUTPUT FILE NAME:   <A2 - Blinking LED, Clock Control, and Software Delay.out>
 ENTRY POINT SYMBOL: "_c_int00_noargs"  address: 0000077d

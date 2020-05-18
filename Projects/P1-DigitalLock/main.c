@@ -26,7 +26,7 @@ void main(void)
 
     lcd = constructor_LCD(BYTE, P6);
     begin_LCD(lcd, LCD_COLUMNS, LCD_ROWS, LCD_5x8DOTS);
-    display_menu_LCD();
+    display_menu_LCD(lcd);
     setup_RED_LED();
     setup_keypad();
     while(1){

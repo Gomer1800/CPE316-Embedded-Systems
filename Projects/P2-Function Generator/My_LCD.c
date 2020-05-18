@@ -1,5 +1,4 @@
 #include "My_LCD.h"
-#include "My_Delays.h"
 /*
  * My_LCD.c
  *
@@ -280,13 +279,15 @@ void write_string_LCD(void *lcd, char *my_string)
     }
 }
 
-void display_menu_LCD(void *lcd){
+void display_menu_LCD(void *lcd, char *prompt, char *prompt2){
     clear_LCD(lcd);
     delay_us(DELAY2MS); // initial delay to display
-    write_string_LCD(lcd, LOCKED);
-    set_cursor_LCD(lcd, 0, 1);
-    write_string_LCD(lcd, ENTER_KEY);
+    set_cursor_LCD(lcd, 0, 0);
+    write_string_LCD(lcd, prompt);
+    set_cursor_LCD(lcd, strlen(prompt) + 1, 0);
+    write_string_LCD(lcd, prompt2);
     delay_us(DELAY2MS);
+    set_cursor_LCD(lcd, 0, 1);
 }
 
 void moveTextLeft(int maxCount){

@@ -40,6 +40,6 @@ void gen_triangle_wave(double vp, uint32_t period) {
 void main(void) {
 	WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;		// stop watchdog timer
 	init_spi(); // initializes eUSCI_B0 SPI for DAC
-	gen_square_wave(2.5, 20000);
-	//gen_triangle_wave(2.5, 20000);
+	// gen_square_wave(2.5, 20000);
+	gen_triangle_wave(2.5, 20000);
 }
