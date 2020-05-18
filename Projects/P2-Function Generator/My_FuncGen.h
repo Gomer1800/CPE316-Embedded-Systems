@@ -5,11 +5,13 @@
  *      Author: Hayden
  */
 
-#ifndef MY_OSCILLOSCOPE_H_
-#define MY_OSCILLOSCOPE_H_
+#ifndef MY_FUNCGEN_H_
+#define MY_FUNCGEN_H_
+
+#include "msp.h"
 
 // FSM STATES
-enum STATE {INIT, LCD, SQUARE, SAW, SINE};
+enum STATE {INIT, DISPLAY_MENU, SQUARE, SAW, SINE};
 
 // FUNCTION DEFINITIONS
 void change_wave(char keypad_char);
@@ -27,4 +29,4 @@ typedef struct wave_struct {
 #define P_400HZ 2500
 #define P_500HZ 2000
 
-#endif /* MY_OSCILLOSCOPE_H_ */
+#endif /* MY_FUNCGEN_H_ */

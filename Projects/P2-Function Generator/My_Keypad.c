@@ -5,9 +5,9 @@
  *      Author: Hayden Rinn
  */
 
+#include <My_FuncGen.h>
 #include <My_Keypad.h>
 #include "My_Wavegen.h"
-#include "My_Oscilloscope.h"
 
 void setup_keypad(void) {
     WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD; // watchdog

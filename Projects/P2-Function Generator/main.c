@@ -6,7 +6,7 @@
 #include "My_Delays.h"
 #include "My_Wavegen.h"
 #include <My_DAC.h>
-#include "My_Oscilloscope.h"
+#include <My_FuncGen.h>
 /**
  * main.c
  */
@@ -71,11 +71,12 @@ void main(void)
 
             wave_period = P_100HZ;
             wave_dutycycle = 0.5;
-            NEXT_STATE = SQUARE;
+            CURRENT_WAVE = SQUARE;
+            NEXT_STATE = DISPLAY_MENU;
             setup_keypad();
             break;
 
-        case LCD:
+        case DISPLAY_MENU:
             // Ill call the lcd print here
             //display_menu_LCD(lcd, STRING_SQUARE);
             NEXT_STATE = CURRENT_WAVE;
@@ -85,21 +86,33 @@ void main(void)
             CURRENT_WAVE = SQUARE;
             gen_square_wave(wave_dutycycle, wave_period);
             //display_menu_LCD(lcd, STRING_SQUARE);
-            NEXT_STATE = CURRENT_WAVE;
+            if (CURRENT_WAVE != PRESENT_STATE) {
+                NEXT_STATE = DISPLAY_MENU;
+            } else {
+                NEXT_STATE = CURRENT_WAVE;
+            }
             break;
 
         case SAW:
             CURRENT_WAVE = SAW;
             gen_sawtooth_wave(wave_period);
             //display_menu_LCD(lcd, STRING_SAW);
-            NEXT_STATE = CURRENT_WAVE;
+            if (CURRENT_WAVE != PRESENT_STATE) {
+                NEXT_STATE = DISPLAY_MENU;
+            } else {
+                NEXT_STATE = CURRENT_WAVE;
+            }
             break;
 
         case SINE:
             CURRENT_WAVE = SINE;
             gen_sine_wave(wave_period);
             //display_menu_LCD(lcd, STRING_SINE);
-            NEXT_STATE = CURRENT_WAVE;
+            if (CURRENT_WAVE != PRESENT_STATE) {
+                NEXT_STATE = DISPLAY_MENU;
+            } else {
+                NEXT_STATE = CURRENT_WAVE;
+            }
             break;
 
         default:
