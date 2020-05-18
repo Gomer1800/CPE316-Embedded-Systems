@@ -78,24 +78,26 @@ void main(void)
         case SQUARE:
             CURRENT_WAVE = SQUARE;
             gen_square_wave(wave_dutycycle, wave_period);
+            display_menu_LCD(lcd, STRING_SQUARE);
             NEXT_STATE = CURRENT_WAVE;
             break;
 
         case SAW:
             CURRENT_WAVE = SAW;
             gen_sawtooth_wave(wave_period);
+            display_menu_LCD(lcd, STRING_SAW);
             NEXT_STATE = CURRENT_WAVE;
             break;
 
         case SINE:
             CURRENT_WAVE = SINE;
             gen_sine_wave(wave_period);
+            display_menu_LCD(lcd, STRING_SINE);
             NEXT_STATE = CURRENT_WAVE;
             break;
 
         default:
-            //NEXT_STATE = ((Wave*)waveform)->CURRENT_WAVE;
-            //NEXT_STATE = SQUARE;
+            NEXT_STATE = SQUARE;
             break;
         }
 
