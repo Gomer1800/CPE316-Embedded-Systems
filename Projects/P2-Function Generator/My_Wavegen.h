@@ -17,7 +17,7 @@
 //Define macros for menu
 #define STRING_SQUARE     ((char *)("SQUARE"))
 #define STRING_SINE       ((char *)("SINE"))
-#define STRING_SAW        ((char *)("SAW TOOTH"))
+#define STRING_SAW        ((char *)("SAW"))
 
 // FUNCTION DEFINITIONS
 void gen_square_wave(double dutycycle, uint32_t period);

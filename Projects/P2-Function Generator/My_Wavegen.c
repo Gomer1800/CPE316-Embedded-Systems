@@ -17,16 +17,6 @@ static uint16_t sine_lookup_q1[32] = {
 901, 909, 915, 920, 925, 928, 929, 930
 };
 
-/*void* constructor_waveform(void){
-    Wave* wave;
-    wave = malloc(sizeof(Wave));
-    wave->CURRENT_WAVE = SAW;
-    wave->DUTY_CYCLE   = 50;
-    wave->PERIOD       = 20000;
-    return wave;
-}*/
-
-
 void gen_square_wave(double dutycycle, uint32_t period) {
     uint16_t voltage = DAC_3V;
     uint32_t on_period = period * dutycycle;
@@ -73,19 +63,3 @@ void gen_sine_wave(uint32_t period) {
             delay_us(step_delay);
         }
 }
-
-/*char* get_wave_string(void) {
-    switch(((Wave*)waveform)->CURRENT_WAVE){
-        case SQUARE:
-            return STRING_SQUARE;
-
-        case SINE:
-            return STRING_SINE;
-
-        case SAW:
-            return STRING_SAW;
-
-        default:
-            return "?????";
-    }
-}*/

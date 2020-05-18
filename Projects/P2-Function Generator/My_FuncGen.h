@@ -9,6 +9,7 @@
 #define MY_FUNCGEN_H_
 
 #include "msp.h"
+#include <string.h>
 
 // FSM STATES
 enum STATE {INIT, DISPLAY_MENU, SQUARE, SAW, SINE};
@@ -16,6 +17,7 @@ enum STATE {INIT, DISPLAY_MENU, SQUARE, SAW, SINE};
 // FUNCTION DEFINITIONS
 void change_wave(char keypad_char);
 char*get_wave_string(STATE);
+char*get_freq_string(uint16_t period);
 
 // STRUCTS
 typedef struct wave_struct {

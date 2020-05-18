@@ -63,27 +63,25 @@ void main(void)
             //***** DAC INITIALIZATION *****
             init_spi(); // initializes eUSCI_B0 SPI for DAC
 
-            //***** KEYPAD INITIALIZATION ****
-            display_menu_LCD(lcd, "");
-
             //***** WAVE INITIALIZATION *****
             wave_period = P_100HZ;
             wave_dutycycle = 0.5;
             CURRENT_WAVE = SQUARE;
             NEXT_STATE = DISPLAY_MENU;
+
+            //***** KEYPAD INITIALIZATION ****
             setup_keypad();
             break;
 
         case DISPLAY_MENU:
-            display_menu_LCD(lcd, get_wave_string(CURRENT_WAVE));
+            display_menu_LCD(lcd, get_wave_string(CURRENT_WAVE), get_freq_string(wave_period));
             NEXT_STATE = CURRENT_WAVE;
             break;
 
         case SQUARE:
             CURRENT_WAVE = SQUARE;
             gen_square_wave(wave_dutycycle, wave_period);
-            //display_menu_LCD(lcd, STRING_SQUARE);
-            if (CURRENT_WAVE != PRESENT_STATE) {
+            if (CURRENT_WAVE != NEXT_STATE) {
                 NEXT_STATE = DISPLAY_MENU;
             } else {
                 NEXT_STATE = CURRENT_WAVE;
@@ -93,8 +91,7 @@ void main(void)
         case SAW:
             CURRENT_WAVE = SAW;
             gen_sawtooth_wave(wave_period);
-            //display_menu_LCD(lcd, STRING_SAW);
-            if (CURRENT_WAVE != PRESENT_STATE) {
+            if (CURRENT_WAVE != NEXT_STATE) {
                 NEXT_STATE = DISPLAY_MENU;
             } else {
                 NEXT_STATE = CURRENT_WAVE;
@@ -104,8 +101,7 @@ void main(void)
         case SINE:
             CURRENT_WAVE = SINE;
             gen_sine_wave(wave_period);
-            //display_menu_LCD(lcd, STRING_SINE);
-            if (CURRENT_WAVE != PRESENT_STATE) {
+            if (CURRENT_WAVE != NEXT_STATE) {
                 NEXT_STATE = DISPLAY_MENU;
             } else {
                 NEXT_STATE = CURRENT_WAVE;
@@ -126,22 +122,27 @@ void change_wave(char keypad_char){
 
     case '1':
         wave_period = P_100HZ;
+        NEXT_STATE = DISPLAY_MENU;
         break;
 
     case '2':
         wave_period = P_200HZ;
+        NEXT_STATE = DISPLAY_MENU;
         break;
 
     case '3':
         wave_period = P_300HZ;
+        NEXT_STATE = DISPLAY_MENU;
         break;
 
     case '4':
         wave_period = P_400HZ;
+        NEXT_STATE = DISPLAY_MENU;
         break;
 
     case '5':
         wave_period = P_500HZ;
+        NEXT_STATE = DISPLAY_MENU;
         break;
 
     case '6':
@@ -196,5 +197,28 @@ char* get_wave_string(STATE){
     default:
         return "STATE ERROR";
 
+    }
+}
+
+char*get_freq_string(uint16_t period){
+
+    switch(period){
+    case P_100HZ:
+        return "100HZ";
+
+    case P_200HZ:
+        return "200HZ";
+
+    case P_300HZ:
+        return "300HZ";
+
+    case P_400HZ:
+        return "400HZ";
+
+    case P_500HZ:
+        return "500HZ";
+
+    default:
+        return "FREQ ERROR";
     }
 }
