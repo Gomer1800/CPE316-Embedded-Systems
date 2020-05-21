@@ -8,7 +8,7 @@
  */
 
 void init_spi(void) {
-    // P1.6 = USB0SIMO -> SDI
+    // P1.6 = UCB0SIMO -> SDI
     // P1.5 = UCB0CLK -> SCLK
     // P5.1 -> CS
 
@@ -24,13 +24,13 @@ void init_spi(void) {
     // set UCSWRST
     EUSCI_B0->CTLW0 |= EUSCI_B_CTLW0_SWRST;         // This puts the SPI into reset mode and allows config
     // Configure parameters
-    EUSCI_B0->CTLW0 |= EUSCI_B_CTLW0_MST;           // master mode
+    EUSCI_B0->CTLW0 |=  EUSCI_B_CTLW0_MST;           // master mode
     EUSCI_B0->CTLW0 &= ~EUSCI_B_CTLW0_CKPL;         // clock is low when inactive
-    EUSCI_B0->CTLW0 |= EUSCI_B_CTLW0_CKPH;          // Data is changed on the falling edge of the clock
-    EUSCI_B0->CTLW0 |= EUSCI_B_CTLW0_MSB;           // MSB is transmitted first
+    EUSCI_B0->CTLW0 |=  EUSCI_B_CTLW0_CKPH;          // Data is changed on the falling edge of the clock
+    EUSCI_B0->CTLW0 |=  EUSCI_B_CTLW0_MSB;           // MSB is transmitted first
     EUSCI_B0->CTLW0 &= ~EUSCI_B_CTLW0_SEVENBIT;     // 8 bit data length mode
-    EUSCI_B0->CTLW0 |= EUSCI_B_CTLW0_SYNC;          // Synchronous mode
-    EUSCI_B0->CTLW0 |= EUSCI_B_CTLW0_SSEL__SMCLK;   // Select SMCLK as clock source
+    EUSCI_B0->CTLW0 |=  EUSCI_B_CTLW0_SYNC;          // Synchronous mode
+    EUSCI_B0->CTLW0 |=  EUSCI_B_CTLW0_SSEL__SMCLK;   // Select SMCLK as clock source
     // Clear UCSWRST
     EUSCI_B0->CTLW0 &= ~EUSCI_B_CTLW0_SWRST;        // SPI is released for normal operation
 }
