@@ -8,17 +8,17 @@
  */
 
 void init_spi(void) {
-    // P1.6 = USB0SIMO -> SDI
-    // P1.5 = UCB0CLK -> SCLK
-    // P5.1 -> CS
+    // P1.7 = USB0SOMI -> SDI
+    // P1.5 = UCB0CLK  -> SCLK
+    // P4.1 -> CS
 
     P1->SEL0 |= BIT5 | BIT6; // Set P1.5 and P1.6 as SPI pins
 
     // Setup P4.1 (CS) as GPIO output
-    P5->SEL0 &= ~BIT1;
-    P5->SEL1 &= ~BIT1;
-    P5->DIR |= BIT1;
-    P5->OUT |= BIT1; // CS is high when idle
+    P4->SEL0 &= ~BIT1;
+    P4->SEL1 &= ~BIT1;
+    P4->DIR |= BIT1;
+    P4->OUT |= BIT1; // CS is high when idle
 
     // Initialize eUSCI
     // set UCSWRST
@@ -47,7 +47,7 @@ uint8_t get_lower(uint16_t data) {
 
 void dac_write(uint16_t data) {
     uint8_t transmit_count = 0;
-    P5->OUT &= ~BIT1;                               // Sets CS as low, signaling a transmission to the DAC
+    P4->OUT &= ~BIT1;                               // Sets CS as low, signaling a transmission to the DAC
     while (transmit_count < 2) {
         if (EUSCI_B0->IFG & EUSCI_B_IFG_TXIFG) {    // If the TX Buffer is ready for more data
             if (transmit_count == 0) {
@@ -58,7 +58,7 @@ void dac_write(uint16_t data) {
             transmit_count++;
         }
     }
-    P5->OUT |= BIT1;                                // Sets CS back to high, signaling end of transmission
+    P4->OUT |= BIT1;                                // Sets CS back to high, signaling end of transmission
 }
 
 uint16_t volt_to_int(double voltage) {
