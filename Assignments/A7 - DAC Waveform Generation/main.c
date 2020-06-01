@@ -6,6 +6,11 @@
 
 /**
  * main.c
+ *
+ * Pins Used
+ * P1.7 = USB0SOMI -> SDI
+ * P1.5 = UCB0CLK  -> SCLK
+ * P4.1 -> CS
  */
 
 void gen_square_wave(double vp, uint32_t period) {
