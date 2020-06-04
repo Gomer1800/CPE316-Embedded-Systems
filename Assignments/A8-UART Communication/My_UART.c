@@ -23,17 +23,27 @@ void init_UART(void){
 
     // 1.
     EUSCI_A0->CTLW0 |=  EUSCI_A_CTLW0_SWRST;    // software reset enable
+
     // 2.
-    EUSCI_A0->CTLW0 &= ~EUSCI_A_CTLW0_SYNC;     // UART mode selected
-    EUSCI_A0->CTLW0 |=  EUSCI_A_CTLW0_MODE_3;   // UART mode w/ automatic baud rate detection
-    //EUSCI_A0->CTLW0 |=  EUSCI_A_CTLW0_MST;      // master mode select
-    //EUSCI_A0->CTLW0 &= ~EUSCI_A_CTLW0_CKPL;     // clock is low when inactive
-    //EUSCI_A0->CTLW0 &= ~EUSCI_A_CTLW0_MSB;      // LSB first
-    //EUSCI_A0->CTLW0 &= ~EUSCI_A_CTLW0_SEVENBIT; // 8-bit mode select
+    EUSCI_A0->CTLW0 |=  EUSCI_A_CTLW0_MODE_0;   // UART mode
+    EUSCI_A0->CTLW0 &= ~EUSCI_A_CTLW0_SYNC;     // Asynchronous mode
+    EUSCI_A0->CTLW0 &= ~EUSCI_A_CTLW0_PEN;      // Parity Disabled
+    EUSCI_A0->CTLW0 &= ~EUSCI_A_CTLW0_SEVENBIT; // 8-bit data
+    EUSCI_A0->CTLW0 &= ~EUSCI_A_CTLW0_SPB;      // One stop bit
+    EUSCI_A0->CTLW0 |=  EUSCI_A_CTLW0_UCSSEL_2; // eUSCI_A clock source: SMCLK
+
+    //clock prescaler setting of the baud-rate generator
+    EUSCI_A0->BRW = 26;         // 3,000,000 / 115200 = 26
+
+    EUSCI_A0->MCTLW = 0;        // disable oversampling
+
     // 3.
+    P1->SEL0 |=  0x0C;           // P1.3, P1.2 for UART
+    P1->SEL1 &= ~0x0C;
 
     // 4.
     EUSCI_A0->CTLW0 &= ~EUSCI_A_CTLW0_SWRST;    // software reset disable
+
 }
 
 uint8_t UART_TX(uint8_t data) {
