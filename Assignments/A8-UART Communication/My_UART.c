@@ -33,7 +33,8 @@ void init_UART(void){
     EUSCI_A0->CTLW0 |=  EUSCI_A_CTLW0_UCSSEL_2; // eUSCI_A clock source: SMCLK
 
     //clock prescaler setting of the baud-rate generator
-    EUSCI_A0->BRW = 26;         // 3,000,000 / 115200 = 26
+    //EUSCI_A0->BRW = 26;         // 3,000,000 / 115200 = 26
+    EUSCI_A0->BRW = 312;            // 3,000,000 / 9600 = 312.5
 
     EUSCI_A0->MCTLW = 0;        // disable oversampling
 
@@ -46,11 +47,9 @@ void init_UART(void){
 
 }
 
-uint8_t UART_TX(uint8_t data) {
-    // Check if the TX Buffer is ready for data
-    if( EUSCI_A0->CTLW0 & EUSCI_A_IFG_TXIFG == EUSCI_A_IFG_TXIFG){
-        EUSCI_A0->TXBUF = data; // Transmit the 8 bits
-        return 1;   // successful transmissions
-    }
-    else return 0;  // failed transmission
+void UART_TX(uint8_t data) {
+    // Wait until TX Buffer is ready for data
+    while(!(EUSCI_A0->IFG & 0x02)) {  asm ("NOP"); }
+    EUSCI_A0->TXBUF = data; // Transmit the 8 bits
+    delay_us(2);
 }

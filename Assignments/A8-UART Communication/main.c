@@ -6,12 +6,17 @@
 /**
  * main.c
  */
+
+/* delay milliseconds when system clock is at 3 MHz */
+void delayMs(int n) {
+    int i, j;
+    for (j = 0; j < n; j++)
+        for (i = 750; i > 0; i--);      /* Delay */
+}
+
 void main(void)
 {
 	WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;		// stop watchdog timer
-
-	//***** DCO INITIALIZATION *****
-    setup_DCO(FREQ_3MHZ);
 
     //***** LCD INITIALIZATION *****
     //__delay_cycles(DELAY50MS); // Wait for LCD to power up to at least 4.5 V
@@ -21,9 +26,11 @@ void main(void)
     //***** UART INITIALIZATION *****
 	init_UART();
 
-	while(1){
-	    UART_TX(0x61); // print 'a'
-	    __delay_cycles(DELAY500MS);
-	    __delay_cycles(DELAY500MS);
-	}
+    while (1) {
+        UART_TX('Y');
+        UART_TX('e');
+        UART_TX('s');
+        UART_TX(0x1B);
+        UART_TX('E');
+    }
 }
