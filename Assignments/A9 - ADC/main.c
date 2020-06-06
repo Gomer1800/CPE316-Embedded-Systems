@@ -1,6 +1,7 @@
 #include "msp.h"
 #include <stdint.h>
-#include<stdio.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include "My_ADC.h"
 #include "My_DCO.h"
 #include "My_UART.h"
@@ -12,26 +13,24 @@ void setup_ADC14(void);
 extern uint16_t digitalVal;
 
 void UART_TX_STRING(uint16_t data){
-    char result[50];
-    snprintf(result, 50, "%d", data);
-    int i;
-    for(i=0;i<50;i++){
-        if(result[i] == '\0'){
-            break;
-        }
-        else{
-            UART_TX(result[i]);
-        }
+    char buffer[33];
+    sprintf(buffer, "%d", data);
+    int i = 0;
+    while(buffer[i] != '\0'){
+        UART_TX(buffer[i]);
+        i++;
     }
+    UART_TX(0x1B);
+    UART_TX('E');
 }
 
 int main(void)
 {
     WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;             // Stop WDT
 
-    setup_DCO(FREQ_3MHZ);
+    // setup_DCO(FREQ_3MHZ);
 
-    setup_MCLK_to_DCO();
+    // setup_MCLK_to_DCO();
 
     // setup UART
     init_UART();
@@ -55,7 +54,9 @@ int main(void)
         }
         for (i = 20000; i > 0; i--);
         ADC14->CTL0 |= ADC14_CTL0_SC;       // Start conversion-software trigger
-        UART_TX_STRING(165);
+
+        UART_TX_STRING(digitalVal);         // EXAMPLE USE OF THE UART TX FUNCTION CALL
+
         __sleep();
     }
 }

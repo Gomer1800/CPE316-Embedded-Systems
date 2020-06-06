@@ -36,8 +36,8 @@ void init_UART(void){
     EUSCI_A0->CTLW0 |=  EUSCI_A_CTLW0_UCSSEL_2; // eUSCI_A clock source: SMCLK
 
     //clock prescaler setting of the baud-rate generator
-    //EUSCI_A0->BRW = 26;         // 3,000,000 / 115200 = 26
-    EUSCI_A0->BRW = 312;            // 3,000,000 / 9600 = 312.5
+    EUSCI_A0->BRW = 26;         // 3,000,000 / 115200 = 26
+    //EUSCI_A0->BRW = 312;            // 3,000,000 / 9600 = 312.5
 
     EUSCI_A0->MCTLW = 0;            // disable oversampling
 
