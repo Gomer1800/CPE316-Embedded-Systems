@@ -73,7 +73,7 @@ void setup_ADC14(void){
 }
 
 void ADC14_IRQHandler(void){
-    static uint16_t digitalVal = 0;
+    digitalVal = 0;
     digitalVal = ADC14->MEM[0];                 // Read conversion result
     flag = 1;
 }

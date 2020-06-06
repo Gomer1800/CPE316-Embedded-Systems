@@ -26,6 +26,8 @@
 #define MY_SMCLK            ADC14_CTL0_SSEL__SMCLK
 #define MY_HSMCLK           ADC14_CTL0_SSEL__HSMCLK
 
+uint16_t digitalVal;
+
 void select_sample_time_cycles(uint32_t numCycles);
 void select_clk_source(uint32_t clkSource);
 void setup_ADC14(void);

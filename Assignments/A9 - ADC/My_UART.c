@@ -47,16 +47,6 @@ void init_UART(void){
 
     // 4.
     EUSCI_A0->CTLW0 &= ~EUSCI_A_CTLW0_SWRST;    // software reset disable
-
-    // 5.
-    EUSCI_A0->IFG &= ~(EUSCI_A_IFG_RXIFG); //| EUSCI_A_IFG_STTIFG);
-    EUSCI_A0->IE  |=   EUSCI_A_IE_RXIE; //| EUSCI_A_IE_STTIE;
-
-    // enable EUSCIA0 on the NVIC
-    // INTISR[16] eUSCI_A0 UART or SPI mode TX, RX, and Status Flags
-    NVIC->ISER[0] = 1 << ((EUSCIA0_IRQn) & 0x1F);
-
-    __enable_irq(); // enable global interrupts
 }
 
 void UART_TX(uint8_t data) {
@@ -64,15 +54,5 @@ void UART_TX(uint8_t data) {
     while(!(EUSCI_A0->IFG & EUSCI_A__TXIE)) { asm ("NOP"); }
     EUSCI_A0->TXBUF = data; // Transmit the 8 bits
     delay_us(2);
-}
-
-void EUSCIA0_IRQHandler(void){
-    //if(!(EUSCI_A0->IFG & EUSCI_A_IE_STTIE)){
-    //while(!(EUSCI_A0->IFG & EUSCI_A_IFG_RXIFG)) { }
-    RX_DATA = EUSCI_A0->RXBUF;
-    //RX_DATA = EUSCI_A0->RXBUF;
-    delay_us(100);
-    //}
-    EUSCI_A0->IFG &= ~(EUSCI_A_IFG_RXIFG); //| EUSCI_A_IFG_STTIFG);
 }
 

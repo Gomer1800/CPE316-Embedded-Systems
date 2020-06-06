@@ -1,11 +1,29 @@
 #include "msp.h"
 #include <stdint.h>
+#include<stdio.h>
 #include "My_ADC.h"
 #include "My_DCO.h"
+#include "My_UART.h"
 
 uint8_t flag = 0;
 
 void setup_ADC14(void);
+
+extern uint16_t digitalVal;
+
+void UART_TX_STRING(uint16_t data){
+    char result[50];
+    snprintf(result, 50, "%d", data);
+    int i;
+    for(i=0;i<50;i++){
+        if(result[i] == '\0'){
+            break;
+        }
+        else{
+            UART_TX(result[i]);
+        }
+    }
+}
 
 int main(void)
 {
@@ -14,6 +32,9 @@ int main(void)
     setup_DCO(FREQ_3MHZ);
 
     setup_MCLK_to_DCO();
+
+    // setup UART
+    init_UART();
 
     // Configure GPIO
     P4->SEL1 |= BIT7; //Set to alternate mode| BIT6 | BIT7;
@@ -34,6 +55,7 @@ int main(void)
         }
         for (i = 20000; i > 0; i--);
         ADC14->CTL0 |= ADC14_CTL0_SC;       // Start conversion-software trigger
+        UART_TX_STRING(165);
         __sleep();
     }
 }
