@@ -121,7 +121,7 @@ void rightToLeft        (void *lcd);
 void autoscroll         (void *lcd);
 void noAutoscroll       (void *lcd);
 
-void write_char_LCD     (void *lcd, char);
+void write_char_LCD     (void *lcd, uint8_t);
 void write_string_LCD   (void *lcd, char*);
 void display_menu_LCD   (void *lcd, char *prompt, char *prompt2);
 

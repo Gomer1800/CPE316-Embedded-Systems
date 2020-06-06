@@ -263,7 +263,7 @@ void noAutoscroll       (void *lcd)
     command(lcd, LCD_ENTRYMODESET | ((LCD*)lcd)->_displaymode);
 }
 
-void write_char_LCD(void *lcd, char my_char)
+void write_char_LCD(void *lcd, uint8_t my_char)
 {
     write(lcd , get_char(my_char) );
 }

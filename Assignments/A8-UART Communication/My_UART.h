@@ -9,6 +9,7 @@
 #define MY_UART_H_
 
 #include "msp.h"
+#include "My_Delays.h"
 
 // Initializes UART according to Ch 24 in the TRM
 void init_UART(void);
