@@ -3,7 +3,7 @@
  * My_UART.c
  *
  *  Created on: Jun 2, 2020
- *      Author: Wulfkine
+ *      Author: Luis Gomez
  *
  *  Important Pins
  *
@@ -66,13 +66,21 @@ void UART_TX(uint8_t data) {
     delay_us(2);
 }
 
+void UART_TX_STRING(uint32_t data){
+    char buffer[33];
+    sprintf(buffer, "%d", data);
+    int i = 0;
+    while(buffer[i] != '\0'){
+        UART_TX(buffer[i]);
+        i++;
+    }
+    UART_TX(0x1B);
+    UART_TX('E');
+}
+
 void EUSCIA0_IRQHandler(void){
-    //if(!(EUSCI_A0->IFG & EUSCI_A_IE_STTIE)){
-    //while(!(EUSCI_A0->IFG & EUSCI_A_IFG_RXIFG)) { }
     RX_DATA = EUSCI_A0->RXBUF;
-    //RX_DATA = EUSCI_A0->RXBUF;
-    delay_us(100);
-    //}
-    EUSCI_A0->IFG &= ~(EUSCI_A_IFG_RXIFG); //| EUSCI_A_IFG_STTIFG);
+    delay_us(2);
+    //EUSCI_A0->IFG &= ~(EUSCI_A_IFG_RXIFG); //| EUSCI_A_IFG_STTIFG);
 }
 
