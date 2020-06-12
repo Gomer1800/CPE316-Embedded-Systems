@@ -31,6 +31,7 @@ uint16_t digitalVal;
 void select_sample_time_cycles(uint32_t numCycles);
 void select_clk_source(uint32_t clkSource);
 void setup_ADC14(void);
+uint32_t calibrate_digital_to_analog(uint16_t digitalValue);
 void ADC14_IRQHandler(void);
 
 #endif /* MY_ADC_H_ */

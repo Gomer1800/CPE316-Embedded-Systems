@@ -6,31 +6,14 @@
 #include "My_DCO.h"
 #include "My_UART.h"
 
-uint8_t flag = 0;
-
-void setup_ADC14(void);
-
+volatile uint8_t flag = 0;
 extern uint16_t digitalVal;
 
-void UART_TX_STRING(uint16_t data){
-    char buffer[33];
-    sprintf(buffer, "%d", data);
-    int i = 0;
-    while(buffer[i] != '\0'){
-        UART_TX(buffer[i]);
-        i++;
-    }
-    UART_TX(0x1B);
-    UART_TX('E');
-}
+void setup_ADC14(void);
 
 int main(void)
 {
     WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;             // Stop WDT
-
-    // setup_DCO(FREQ_3MHZ);
-
-    // setup_MCLK_to_DCO();
 
     // setup UART
     init_UART();
@@ -44,19 +27,19 @@ int main(void)
     NVIC->ISER[0] = 1 << ((ADC14_IRQn) & 31);
     setup_ADC14();
 
-    SCB->SCR &= ~SCB_SCR_SLEEPONEXIT_Msk;   // Wake up on exit from ISR
-    __DSB();    // Ensures SLEEPONEXIT occurs immediately
+    ADC14->CTL0 |= ADC14_CTL0_SC;               // Start conversion-software trigger
 
     while (1){
         int i;
+        uint32_t calibrated;
         if(flag == 1){
+            calibrated = calibrate_digital_to_analog(digitalVal);
+            UART_TX_STRING(calibrated);
+            UART_TX('\n');                      //get a newline
+            UART_TX('\r');                      //put the cursor at the beginning of new line
+            for (i = 20000; i > 0; i--);
             flag = 0;
+            ADC14->CTL0 |= ADC14_CTL0_SC;       // Start conversion-software trigger
         }
-        for (i = 20000; i > 0; i--);
-        ADC14->CTL0 |= ADC14_CTL0_SC;       // Start conversion-software trigger
-
-        UART_TX_STRING(digitalVal);         // EXAMPLE USE OF THE UART TX FUNCTION CALL
-
-        __sleep();
     }
 }

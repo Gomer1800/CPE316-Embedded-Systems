@@ -56,3 +56,14 @@ void UART_TX(uint8_t data) {
     delay_us(2);
 }
 
+void UART_TX_STRING(uint32_t data){
+    char buffer[33];
+    sprintf(buffer, "%d", data);
+    int i = 0;
+    while(buffer[i] != '\0'){
+        UART_TX(buffer[i]);
+        i++;
+    }
+    UART_TX(0x1B);
+    UART_TX('E');
+}

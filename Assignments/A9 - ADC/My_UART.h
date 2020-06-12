@@ -16,4 +16,6 @@ void init_UART(void);
 
 void UART_TX(uint8_t data);
 
+void UART_TX_STRING(uint32_t data);
+
 #endif /* MY_UART_H_ */

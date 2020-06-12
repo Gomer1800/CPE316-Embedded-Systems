@@ -72,6 +72,13 @@ void setup_ADC14(void){
     ADC14->CTL0 |= ADC14_CTL0_ENC;              // Enable conversions
 }
 
+uint32_t calibrate_digital_to_analog(uint16_t digitalValue){
+    uint32_t result;
+    result = 202*digitalValue + 4492;           //from trendline
+    return result;
+}
+
+
 void ADC14_IRQHandler(void){
     digitalVal = 0;
     digitalVal = ADC14->MEM[0];                 // Read conversion result
