@@ -1,20 +1,8 @@
 #include "msp.h"
 
 // Delay constants
+#define DELAY20MS               ((uint32_t)20000)   //20ms
 
-// Seconds
-#define DELAY10S                 ((uint32_t)10000000)   // 10s
-#define DELAY1S                 ((uint32_t)1000000)     // 1s
-
-// Milliseconds
-#define DELAY500MS              ((uint32_t)500000)  // 500ms
-#define DELAY100MS              ((uint32_t)100000)  // 100ms
-#define DELAY50MS               ((uint32_t)50000)   // 50ms
-#define DELAY40MS               ((uint32_t)40000)   // 40ms
-#define DELAY25MS               ((uint32_t)25000)   //25ms
-#define DELAY5MS                ((uint32_t)5000)    // 5ms
-#define DELAY4_1MS              ((uint32_t)4500)    // 4.1ms
-#define DELAY2MS                ((uint32_t)2000)    // 2ms
 /**
  * main.c
  */
@@ -49,9 +37,15 @@ void main(void)
 	// P1.1 polled every 20ms
 	while(1)
 	{
+	    __delay_ms(DELAY20MS);
+
 	    if(P1->OUT & BIT1)
 	    {
-
+	        uint8_t count = 0;
+	        for(count=0; count<5; count++)
+	        {
+	            send_data_spi(myarray[count]);
+	        }
 	    }
 	}
 }
