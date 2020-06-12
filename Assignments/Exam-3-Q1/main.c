@@ -1,9 +1,26 @@
 #include "msp.h"
 
+// Delay constants
 
+// Seconds
+#define DELAY10S                 ((uint32_t)10000000)   // 10s
+#define DELAY1S                 ((uint32_t)1000000)     // 1s
+
+// Milliseconds
+#define DELAY500MS              ((uint32_t)500000)  // 500ms
+#define DELAY100MS              ((uint32_t)100000)  // 100ms
+#define DELAY50MS               ((uint32_t)50000)   // 50ms
+#define DELAY40MS               ((uint32_t)40000)   // 40ms
+#define DELAY25MS               ((uint32_t)25000)   //25ms
+#define DELAY5MS                ((uint32_t)5000)    // 5ms
+#define DELAY4_1MS              ((uint32_t)4500)    // 4.1ms
+#define DELAY2MS                ((uint32_t)2000)    // 2ms
 /**
  * main.c
  */
+
+// Delay Dummy Function
+void __delay_ms(uint8_t delay);
 
 // DCO;
 void set_DCO_24MHZ(void);
@@ -21,10 +38,21 @@ void main(void)
 	// setup DCO 24MHZ
 	set_DCO_24MHZ();
 
+	// Setup GPIO for P1.1
+	P1->DIR  &= ~BIT1;
+	P1->SEL1 &= ~BIT1;
+	P1->SEL0 &= ~BIT1;
+
+	// Setup SPI
+	init_SPI();
+
 	// P1.1 polled every 20ms
 	while(1)
 	{
+	    if(P1->OUT & BIT1)
+	    {
 
+	    }
 	}
 }
 
@@ -56,4 +84,9 @@ void set_DCO_24MHZ(void)
     CS-> CTL0 = CS_CTL0_DCORSEL_4;
     CS-> CTL1 = CS_CTL1_SELA_2 | CS_CTL1_SELS_3 | CS_CTL1_SELM_3;
     CS-> KEY = 0;
+}
+
+void __delay_ms(uint8_t delay)
+{
+    //__delay_cycles(DELAY50MS);
 }
