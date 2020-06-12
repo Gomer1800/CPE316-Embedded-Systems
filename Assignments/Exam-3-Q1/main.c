@@ -3,11 +3,12 @@
 // Delay constants
 #define DELAY20MS               ((uint32_t)20000)   //20ms
 
-/**
- * main.c
- */
+// shifts
+#define DATA_UPPER 0xFF00
+#define DATA_LOWER 0x00FF
+#define UPPER_SHIFT 8
 
-// Delay Dummy Function
+// Delay Dummy Function, assume it checks DCO clock to desired SW delay
 void __delay_ms(uint8_t delay);
 
 // DCO;
@@ -44,7 +45,11 @@ void main(void)
 	        uint8_t count = 0;
 	        for(count=0; count<5; count++)
 	        {
-	            send_data_spi(myarray[count]);
+	            while(!(EUSCI_B0->IFG & EUSCI_B_IFG_TXIFG)) // upper bits
+	                send_data_spi((myarray[count] & DATA_UPPER) >> UPPER_SHIFT);
+
+                while(!(EUSCI_B0->IFG & EUSCI_B_IFG_TXIFG)) // lower bits
+                    send_data_spi(myarray[count] & DATA_LOWER);
 	        }
 	    }
 	}
