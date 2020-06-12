@@ -22,6 +22,8 @@ My_UART.obj: C:/ti/ccs1000/ccs/ccs_base/arm/include/CMSIS/cmsis_ccs.h
 My_UART.obj: C:/ti/ccs1000/ccs/ccs_base/arm/include/system_msp432p401r.h
 My_UART.obj: ../My_Delays.h
 My_UART.obj: ../My_DCO.h
+My_UART.obj: C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-arm_20.2.0.LTS/include/stdio.h
+My_UART.obj: C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-arm_20.2.0.LTS/include/stdarg.h
 
 ../My_UART.c: 
 ../My_UART.h: 
@@ -45,3 +47,5 @@ C:/ti/ccs1000/ccs/ccs_base/arm/include/CMSIS/cmsis_ccs.h:
 C:/ti/ccs1000/ccs/ccs_base/arm/include/system_msp432p401r.h: 
 ../My_Delays.h: 
 ../My_DCO.h: 
+C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-arm_20.2.0.LTS/include/stdio.h: 
+C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-arm_20.2.0.LTS/include/stdarg.h: 
