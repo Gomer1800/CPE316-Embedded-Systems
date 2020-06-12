@@ -4,7 +4,7 @@
 
 SHELL = cmd.exe
 
-CG_TOOL_ROOT := C:/Users/luisg/ti/ccs1000/ccs/tools/compiler/ti-cgt-arm_20.2.0.LTS
+CG_TOOL_ROOT := C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-arm_20.2.0.LTS
 
 GEN_OPTS__FLAG := 
 GEN_CMDS__FLAG := 
@@ -148,14 +148,14 @@ all: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
 P1-DigitalLock.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
 	@echo 'Building target: "$@"'
 	@echo 'Invoking: ARM Linker'
-	"C:/Users/luisg/ti/ccs1000/ccs/tools/compiler/ti-cgt-arm_20.2.0.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me --advice:power=all --define=__MSP432P401R__ --define=ccs -g --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi -z -m"P1-DigitalLock.map" --heap_size=1024 --stack_size=512 -i"C:/Users/luisg/ti/ccs1000/ccs/ccs_base/arm/include" -i"C:/Users/luisg/ti/ccs1000/ccs/tools/compiler/ti-cgt-arm_20.2.0.LTS/lib" -i"C:/Users/luisg/ti/ccs1000/ccs/tools/compiler/ti-cgt-arm_20.2.0.LTS/include" --reread_libs --diag_wrap=off --display_error_number --warn_sections --xml_link_info="P1-DigitalLock_linkInfo.xml" --rom_model -o "P1-DigitalLock.out" $(ORDERED_OBJS)
+	"C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-arm_20.2.0.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me --advice:power=all --define=__MSP432P401R__ --define=ccs -g --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi -z -m"P1-DigitalLock.map" --heap_size=1024 --stack_size=512 -i"C:/ti/ccs1000/ccs/ccs_base/arm/include" -i"C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-arm_20.2.0.LTS/lib" -i"C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-arm_20.2.0.LTS/include" --reread_libs --diag_wrap=off --display_error_number --warn_sections --xml_link_info="P1-DigitalLock_linkInfo.xml" --rom_model -o "P1-DigitalLock.out" $(ORDERED_OBJS)
 	@echo 'Finished building target: "$@"'
 	@echo ' '
 
 P1-DigitalLock.hex: $(EXE_OUTPUTS)
 	@echo 'Building files: $(strip $(EXE_OUTPUTS__QUOTED))'
 	@echo 'Invoking: ARM Hex Utility'
-	"C:/Users/luisg/ti/ccs1000/ccs/tools/compiler/ti-cgt-arm_20.2.0.LTS/bin/armhex" --memwidth=8 --romwidth=8 -o "P1-DigitalLock.hex" $(EXE_OUTPUTS__QUOTED)
+	"C:/ti/ccs1000/ccs/tools/compiler/ti-cgt-arm_20.2.0.LTS/bin/armhex" --memwidth=8 --romwidth=8 -o "P1-DigitalLock.hex" $(EXE_OUTPUTS__QUOTED)
 	@echo 'Finished building: $(strip $(EXE_OUTPUTS__QUOTED))'
 	@echo ' '
 
