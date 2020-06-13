@@ -26,6 +26,7 @@ void main(void)
 
     while(1)
     {
+        // Reset Data, Offset, and Status Flags
         DATA      = 0;
         OFFSET    = 0;
         DATA_FLG  = 0;
@@ -75,8 +76,13 @@ void TA0_0_IRQHandler(void)
     }
     else if(!(DATA_FLG & 1))
     {
-        P2->OUT = ((DATA >> OFFSET) << 1) & BIT1;
-        OFFSET++;
+        if(OFFSET == 8)
+            DATA_FLG = 1;
+        else
+        {
+            P2->OUT = ((DATA >> OFFSET) << 1) & BIT1;
+            OFFSET++;
+        }
     }
     else if(!(STOP_FLG & 1))
     {
