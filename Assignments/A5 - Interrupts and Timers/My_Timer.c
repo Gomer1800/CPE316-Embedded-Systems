@@ -7,7 +7,7 @@
  */
 void setup_TIMER_A0(void){
     TIMER_A0->CCTL[0] = TIMER_A_CCTLN_CCIE; // period TCCR0 interrupt enabled
-    TIMER_A0->CCTL[1] = TIMER_A_CCTLN_CCIE;//duty cycle TCCR0 interrupt enabled
+    TIMER_A0->CCTL[1] = TIMER_A_CCTLN_CCIE; // duty cycle TCCR0 interrupt enabled
 
     /*SMCLK as source in continuous mode*/
     TIMER_A0->CTL = TIMER_A_CTL_CLR | TIMER_A_CTL_SSEL__SMCLK | TIMER_A_CTL_MC__CONTINUOUS;
